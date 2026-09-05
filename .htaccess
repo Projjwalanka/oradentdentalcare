@@ -1,0 +1,103 @@
+# =============================================================================
+# ORADENT Dental Care — Apache configuration (Hostinger shared hosting)
+# =============================================================================
+
+Options -Indexes +FollowSymLinks
+DirectoryIndex index.php index.html
+
+# ------------------------------------------------------------------ HTTPS ---
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Force HTTPS (Hostinger terminates TLS upstream, so test the forwarded header)
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Canonical host: strip the www. prefix
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+  # Never expose .php extensions or /index.php in a URL
+  RewriteCond %{THE_REQUEST} \s/+index\.php[\s?] [NC]
+  RewriteRule ^ / [R=301,L]
+  RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
+  RewriteRule ^ /%1 [R=301,L]
+
+  # Drop a trailing slash (except on the root)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # ------------------------------------------------------------- routing ---
+  RewriteRule ^sitemap\.xml$            sitemap.php            [L]
+  RewriteRule ^services/([a-z0-9-]+)/?$ service.php?slug=$1    [L,QSA]
+
+  # Pretty URL -> matching .php file
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/$1.php -f
+  RewriteRule ^([a-z0-9-]+)$ $1.php [L,QSA]
+
+  # Everything else that is not a real file -> 404 page
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ /404.php [L]
+</IfModule>
+
+ErrorDocument 404 /404.php
+
+# ---------------------------------------------------------------- security --
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+  Header unset X-Powered-By
+  Header always unset X-Powered-By
+</IfModule>
+
+# Block access to config, env, SQL dumps and version-control leftovers
+<FilesMatch "(^\.env|^\.git|composer\.(json|lock)|\.(sql|md|log|ini|sh|py)$)">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /\.git
+RedirectMatch 404 /(config|sql|tools)/.*\.(php|sql|py)$
+
+# ------------------------------------------------------------- compression --
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript \
+    application/javascript application/json application/xml application/rss+xml \
+    image/svg+xml application/manifest+json
+</IfModule>
+
+# ---------------------------------------------------------------- caching ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                          "access plus 1 month"
+  ExpiresByType text/html                 "access plus 0 seconds"
+  ExpiresByType image/webp                "access plus 1 year"
+  ExpiresByType image/jpeg                "access plus 1 year"
+  ExpiresByType image/png                 "access plus 1 year"
+  ExpiresByType image/svg+xml             "access plus 1 year"
+  ExpiresByType text/css                  "access plus 1 year"
+  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType application/manifest+json "access plus 1 week"
+  ExpiresByType application/xml           "access plus 1 hour"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Assets are cache-busted with ?v=filemtime, so they can be immutable
+  <FilesMatch "\.(css|js|webp|jpg|jpeg|png|svg|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(php|html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_mime.c>
+  AddType image/webp                 .webp
+  AddType application/manifest+json  .webmanifest
+  AddType image/svg+xml              .svg
+</IfModule>

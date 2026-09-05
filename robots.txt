@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /config/
+Disallow: /sql/
+Disallow: /tools/
+Disallow: /booking-confirmed
+Disallow: /*?ref=
+
+# Give crawlers the full picture
+Sitemap: https://oradentdentalcare.com/sitemap.xml
