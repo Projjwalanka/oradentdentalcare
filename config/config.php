@@ -68,17 +68,17 @@ const CLINIC = [
     'doctor_role'     => 'Dental Surgeon — Root Canal Treatment & Oral and Maxillofacial Surgery',
     'tagline'         => 'Your Smile, Our Commitment.',
 
-    'street'          => 'Alap Apartment, 105 Maharani Indira Devy Road, Rabindra Nagar Auto Stand',
+    // Taken from the verified Google Business Profile, so the site and the
+    // listing say the same thing — which is what local ranking rewards.
+    'street'          => '48, Maharani Indira Devi Road',
     'landmark'        => 'Near Sakshi Baban, opposite Gurunan Math',
-    'locality'        => 'Sonarpur',
-    // The immediate neighbourhood patients recognise — used where a hyper-local
-    // label reads better than the postal locality (e.g. the hero badge).
-    'neighbourhood'   => 'Rabindra Nagar',
-    // Short "where we are" label shown in the top bar and footer link.
-    'area_display'    => 'Parnasree, Behala',
+    // One area label, used everywhere: page titles, the hero badge, the top bar,
+    // the schema.org address and the service pages. Keeping it single-valued is
+    // what stops the site saying three different things about where it is.
+    'locality'        => 'Parnasree, Behala',
     'region'          => 'West Bengal',
     'region_code'     => 'WB',
-    'postal'          => '700103',
+    'postal'          => '700060',
     'country'         => 'IN',
     'city'            => 'Kolkata',
 
@@ -106,18 +106,20 @@ define('CLINIC_CITY',          CLINIC['city']);
 /* ------------------------------------------------------- opening hours ----- */
 
 /**
- * Mon–Sat, two sessions a day. Sunday closed.
+ * Open every day, two sessions a day.
  * Times are 24-hour "H:i". Used by the booking engine AND by the
  * openingHoursSpecification in the schema markup, so they can never drift apart.
+ * Every line of copy that quotes the hours is generated from this array too —
+ * see hours_summary() and hours_inline() in includes/functions.php.
  */
 const OPENING_HOURS = [
-    1 => [['10:00', '13:00'], ['17:00', '21:00']], // Monday
-    2 => [['10:00', '13:00'], ['17:00', '21:00']],
-    3 => [['10:00', '13:00'], ['17:00', '21:00']],
-    4 => [['10:00', '13:00'], ['17:00', '21:00']],
-    5 => [['10:00', '13:00'], ['17:00', '21:00']],
-    6 => [['10:00', '13:00'], ['17:00', '21:00']], // Saturday
-    7 => [],                                        // Sunday — closed
+    1 => [['09:30', '14:00'], ['17:30', '21:00']], // Monday
+    2 => [['09:30', '14:00'], ['17:30', '21:00']],
+    3 => [['09:30', '14:00'], ['17:30', '21:00']],
+    4 => [['09:30', '14:00'], ['17:30', '21:00']],
+    5 => [['09:30', '14:00'], ['17:30', '21:00']],
+    6 => [['09:30', '14:00'], ['17:30', '21:00']], // Saturday
+    7 => [['09:30', '14:00'], ['17:30', '21:00']], // Sunday
 ];
 
 /* ------------------------------------------------------------- booking ----- */

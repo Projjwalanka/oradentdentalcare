@@ -7,10 +7,12 @@ require_once __DIR__ . '/includes/slider.php';
 require_once __DIR__ . '/includes/media.php';   // CLINIC_FEATURES
 
 Page::$path        = '/';
-Page::$title       = 'Dentist in Sonarpur, Kolkata | ORADENT Dental Care — Dr. Nabanita Chaklader';
-Page::$description = 'ORADENT Dental Care is a dental clinic in Sonarpur, Kolkata led by Dr. Nabanita Chaklader, BDS (WBUHS) — root canal treatment, implants, oral surgery and family dentistry. Open Mon–Sat. Book online in under a minute.';
+Page::$title       = 'Dentist in ' . CLINIC['locality'] . ', ' . CLINIC['city'] . ' | ORADENT Dental Care — Dr. Nabanita Chaklader';
+Page::$description = 'ORADENT Dental Care is a dental clinic in ' . CLINIC['locality'] . ', ' . CLINIC['city']
+                   . ' led by Dr. Nabanita Chaklader, BDS (WBUHS) — root canal treatment, implants, oral surgery '
+                   . 'and family dentistry. Open every day. Book online in under a minute.';
 Page::$image       = '/assets/img/og-default.jpg';
-Page::$faqs        = array_slice(GENERAL_FAQS, 0, 6);
+Page::$faqs        = array_slice(general_faqs(), 0, 6);
 
 $pageScripts = [];
 require __DIR__ . '/includes/header.php';
@@ -19,7 +21,7 @@ require __DIR__ . '/includes/header.php';
 <section class="hero">
   <div class="wrap hero__in">
     <div>
-      <span class="pill"><?= icon('pin') ?> <?= e(CLINIC['neighbourhood']) ?>, <?= e(CLINIC['city']) ?></span>
+      <span class="pill"><?= icon('pin') ?> <?= e(CLINIC['locality']) ?></span>
       <h1>Healthy smile,<span>happy life.</span></h1>
       <p class="hero__lede">
         Dental care and oral surgery in <?= e(CLINIC['locality']) ?> led by <strong style="color:#fff"><?= e(CLINIC['doctor']) ?></strong>,
@@ -48,7 +50,7 @@ require __DIR__ . '/includes/header.php';
         <source type="image/webp" srcset="/assets/img/clinic-operatory-800.webp 800w, /assets/img/clinic-operatory-1200.webp 1200w"
                 sizes="(min-width: 940px) 46vw, 92vw">
         <img src="/assets/img/clinic-operatory-1200.jpg" width="1200" height="900"
-             alt="Treatment room at ORADENT Dental Care in Sonarpur, Kolkata, with a dental chair, overhead operating light and sterilised instrument tray"
+             alt="Treatment room at ORADENT Dental Care in Parnasree, Behala, Kolkata, with a dental chair, overhead operating light and sterilised instrument tray"
              fetchpriority="high" decoding="async">
       </picture>
       <div class="hero__badge">
@@ -125,7 +127,7 @@ require __DIR__ . '/includes/header.php';
       <picture>
         <source type="image/webp" srcset="/assets/img/dr-nabanita-chaklader-800.webp">
         <img src="/assets/img/dr-nabanita-chaklader-800.jpg" width="800" height="1000" loading="lazy" decoding="async"
-             alt="Dr. Nabanita Chaklader, BDS (WBUHS), dental surgeon at ORADENT Dental Care, at her consulting desk in the Sonarpur clinic">
+             alt="Dr. Nabanita Chaklader, BDS (WBUHS), dental surgeon at ORADENT Dental Care, at her consulting desk in the Parnasree, Behala clinic">
       </picture>
     </div>
     <div>
@@ -267,7 +269,7 @@ require __DIR__ . '/includes/header.php';
         <div class="btn-row mt-2"><a class="btn btn--ghost" href="/faq">All FAQs <?= icon('arrow') ?></a></div>
       </div>
       <div class="faq">
-        <?php foreach (array_slice(GENERAL_FAQS, 0, 6) as $i => [$q, $a]): ?>
+        <?php foreach (array_slice(general_faqs(), 0, 6) as $i => [$q, $a]): ?>
         <details class="faq__item"<?= $i === 0 ? ' open' : '' ?>>
           <summary><?= e($q) ?></summary>
           <div class="faq__answer"><?= e($a) ?></div>
@@ -297,8 +299,14 @@ require __DIR__ . '/includes/header.php';
           <li>
             <span class="icon-badge"><?= icon('clock') ?></span>
             <span><b>Opening hours</b>
-              Monday – Saturday<br>10:00 AM – 1:00 PM &amp; 5:00 PM – 9:00 PM<br>
-              <span style="color:var(--ink-mute)">Sunday closed</span>
+              <?php foreach (hours_summary() as $row): ?>
+                <?= e($row['days_full']) ?><br>
+                <?php if ($row['open']): ?>
+                  <?= e(implode(' & ', $row['sessions'])) ?><br>
+                <?php else: ?>
+                  <span style="color:var(--ink-mute)">Closed</span><br>
+                <?php endif; ?>
+              <?php endforeach; ?>
             </span>
           </li>
           <li>

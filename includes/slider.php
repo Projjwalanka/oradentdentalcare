@@ -173,7 +173,7 @@ function slider_images(): array
             'w'       => (int) $size[0],
             'h'       => (int) $size[1],
             'alt'     => $meta['alt'] ?? ($label . ' at ' . CLINIC['name'] . ', '
-                                          . CLINIC['neighbourhood'] . ', ' . CLINIC['city']),
+                                          . CLINIC['locality'] . ', ' . CLINIC['city']),
             'title'   => $label,
             'caption' => $meta['caption'] ?? '',
         ];

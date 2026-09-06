@@ -46,7 +46,7 @@ return [
     ],
 
     '05-clinic-frontage.jpg' => [
-        'alt'     => 'Frontage of ORADENT Dental Care on Maharani Indira Devy Road, showing treatments offered and opening hours on the window',
+        'alt'     => 'Frontage of ORADENT Dental Care on Maharani Indira Devi Road, showing treatments offered and opening hours on the window',
         'title'   => 'Finding us',
         'caption' => 'The window graphics list our treatments and hours — easy to spot from the auto stand.',
     ],

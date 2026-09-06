@@ -20,8 +20,8 @@ const SERVICES = [
         'featured'  => true,
         'duration'  => '45–90 minutes per sitting',
         'sittings'  => 'Usually 1–2 visits',
-        'title'     => 'Root Canal Treatment in Sonarpur, Kolkata | Painless RCT — ORADENT',
-        'meta'      => 'Painless single-sitting root canal treatment in Sonarpur, Kolkata by Dr. Nabanita Chaklader, BDS (WBUHS), an RCT and oral surgery specialist. Book your RCT consultation online.',
+        'title'     => 'Root Canal Treatment in Parnasree, Behala, Kolkata | Painless RCT — ORADENT',
+        'meta'      => 'Painless single-sitting root canal treatment in Parnasree, Behala, Kolkata by Dr. Nabanita Chaklader, BDS (WBUHS), an RCT and oral surgery specialist. Book your RCT consultation online.',
         'lead'      => 'A root canal is the treatment that lets you keep a tooth that would otherwise have to come out. Dr. Nabanita Chaklader has a declared special interest in endodontics, and RCT is the single most requested treatment at ORADENT.',
         'sections'  => [
             [
@@ -70,8 +70,8 @@ const SERVICES = [
         'featured'  => true,
         'duration'  => '60–90 minutes for placement',
         'sittings'  => 'Placement, then crown after healing',
-        'title'     => 'Dental Implants in Sonarpur, Kolkata | Single & Multiple Tooth — ORADENT',
-        'meta'      => 'Dental implants in Sonarpur, Kolkata. Titanium implants placed by an oral and maxillofacial surgery specialist to replace single or multiple missing teeth. Book a consultation.',
+        'title'     => 'Dental Implants in Parnasree, Behala, Kolkata | Single & Multiple Tooth — ORADENT',
+        'meta'      => 'Dental implants in Parnasree, Behala, Kolkata. Titanium implants placed by an oral and maxillofacial surgery specialist to replace single or multiple missing teeth. Book a consultation.',
         'lead'      => 'An implant is a small titanium post placed into the jawbone to take the place of a missing tooth root. Because Dr. Chaklader\'s second special interest is oral and maxillofacial surgery, implant placement and the surgical planning behind it are done in-house.',
         'sections'  => [
             [
@@ -119,8 +119,8 @@ const SERVICES = [
         'featured'  => true,
         'duration'  => 'Varies by procedure',
         'sittings'  => 'Consultation, then planned surgery',
-        'title'     => 'Oral & Maxillofacial Surgery in Sonarpur, Kolkata — ORADENT Dental Care',
-        'meta'      => 'Oral and maxillofacial surgery in Sonarpur, Kolkata — impacted wisdom tooth removal, minor oral surgery, cysts and biopsies, by Dr. Nabanita Chaklader, BDS (WBUHS).',
+        'title'     => 'Oral & Maxillofacial Surgery in Parnasree, Behala, Kolkata — ORADENT Dental Care',
+        'meta'      => 'Oral and maxillofacial surgery in Parnasree, Behala, Kolkata — impacted wisdom tooth removal, minor oral surgery, cysts and biopsies, by Dr. Nabanita Chaklader, BDS (WBUHS).',
         'lead'      => 'Oral and maxillofacial surgery covers the conditions of the mouth and jaws that go beyond routine dentistry. It is one of Dr. Chaklader\'s two declared special interests, which means these cases are managed here rather than referred on.',
         'sections'  => [
             [
@@ -161,8 +161,8 @@ const SERVICES = [
         'featured'  => false,
         'duration'  => '20–40 minutes',
         'sittings'  => 'Single visit',
-        'title'     => 'Tooth Extraction in Sonarpur, Kolkata | Painless Removal — ORADENT',
-        'meta'      => 'Gentle, painless tooth extraction in Sonarpur, Kolkata. Simple and surgical removals with clear aftercare, by Dr. Nabanita Chaklader, BDS (WBUHS). Book online.',
+        'title'     => 'Tooth Extraction in Parnasree, Behala, Kolkata | Painless Removal — ORADENT',
+        'meta'      => 'Gentle, painless tooth extraction in Parnasree, Behala, Kolkata. Simple and surgical removals with clear aftercare, by Dr. Nabanita Chaklader, BDS (WBUHS). Book online.',
         'lead'      => 'Removing a tooth is the last resort, not the first. When a tooth genuinely cannot be saved, our aim is that the procedure is calm, quick and comfortable — and that you leave knowing what happens next.',
         'sections'  => [
             [
@@ -208,8 +208,8 @@ const SERVICES = [
         'featured'  => true,
         'duration'  => '30–45 minutes',
         'sittings'  => 'Single visit, repeated every 6–12 months',
-        'title'     => 'Teeth Cleaning, Scaling & Polishing in Sonarpur, Kolkata — ORADENT',
-        'meta'      => 'Professional scaling and polishing in Sonarpur, Kolkata. Ultrasonic teeth cleaning for bleeding gums, tartar and stains, from ₹ affordable rates. Book your cleaning online.',
+        'title'     => 'Teeth Cleaning, Scaling & Polishing in Parnasree, Behala, Kolkata — ORADENT',
+        'meta'      => 'Professional scaling and polishing in Parnasree, Behala, Kolkata. Ultrasonic teeth cleaning for bleeding gums, tartar and stains, from ₹ affordable rates. Book your cleaning online.',
         'lead'      => 'Scaling is the single most cost-effective dental treatment there is. It takes under an hour, it is not painful, and it is what prevents the gum disease that causes most adult tooth loss.',
         'sections'  => [
             [
@@ -249,8 +249,8 @@ const SERVICES = [
         'featured'  => false,
         'duration'  => '30–45 minutes',
         'sittings'  => 'Single visit',
-        'title'     => 'Tooth Filling in Sonarpur, Kolkata | Tooth-Coloured Composite — ORADENT',
-        'meta'      => 'Tooth-coloured composite fillings in Sonarpur, Kolkata. Same-day cavity treatment that restores strength and appearance. Book with Dr. Nabanita Chaklader online.',
+        'title'     => 'Tooth Filling in Parnasree, Behala, Kolkata | Tooth-Coloured Composite — ORADENT',
+        'meta'      => 'Tooth-coloured composite fillings in Parnasree, Behala, Kolkata. Same-day cavity treatment that restores strength and appearance. Book with Dr. Nabanita Chaklader online.',
         'lead'      => 'A filling repairs a tooth before the decay reaches the nerve. Catching a cavity at this stage is the difference between a thirty-minute appointment and a root canal.',
         'sections'  => [
             [
@@ -289,8 +289,8 @@ const SERVICES = [
         'featured'  => false,
         'duration'  => '45–90 minutes per visit',
         'sittings'  => 'Depends on the plan',
-        'title'     => 'Cosmetic Dentistry & Smile Makeover in Sonarpur, Kolkata — ORADENT',
-        'meta'      => 'Teeth whitening, veneers and smile makeovers in Sonarpur, Kolkata. Natural-looking cosmetic dentistry planned around your face by Dr. Nabanita Chaklader.',
+        'title'     => 'Cosmetic Dentistry & Smile Makeover in Parnasree, Behala, Kolkata — ORADENT',
+        'meta'      => 'Teeth whitening, veneers and smile makeovers in Parnasree, Behala, Kolkata. Natural-looking cosmetic dentistry planned around your face by Dr. Nabanita Chaklader.',
         'lead'      => 'Good cosmetic dentistry is the kind nobody notices. The aim is teeth that suit your face and look like they grew there — not a uniform white row that announces itself.',
         'sections'  => [
             [
@@ -330,8 +330,8 @@ const SERVICES = [
         'featured'  => true,
         'duration'  => '20–40 minutes',
         'sittings'  => 'Six-monthly reviews',
-        'title'     => 'Children\'s Dentist in Sonarpur, Kolkata | Pediatric Dental Care — ORADENT',
-        'meta'      => 'Friendly pediatric dental care in Sonarpur, Kolkata — check-ups, fluoride, sealants and milk-tooth treatment for children of all ages. Book your child\'s visit online.',
+        'title'     => 'Children\'s Dentist in Parnasree, Behala, Kolkata | Pediatric Dental Care — ORADENT',
+        'meta'      => 'Friendly pediatric dental care in Parnasree, Behala, Kolkata — check-ups, fluoride, sealants and milk-tooth treatment for children of all ages. Book your child\'s visit online.',
         'lead'      => 'A child\'s first few dental visits set their attitude to dentistry for life. We keep them short, unhurried and honest, and we never spring a surprise on a child.',
         'sections'  => [
             [
@@ -368,10 +368,10 @@ const SERVICES = [
 /** Homepage / general FAQs — these feed the FAQPage schema on the FAQ page. */
 const GENERAL_FAQS = [
     ['Where exactly is ORADENT Dental Care?',
-     'We are at Alap Apartment, 105 Maharani Indira Devy Road, near the Rabindra Nagar Auto Stand — close to Sakshi Baban and opposite Gurunan Math, Sonarpur, Kolkata 700103. There is an auto stand directly outside, and the clinic is on the ground floor.'],
+     'We are at {address} — {landmark}. There is an auto stand directly outside, and the clinic is on the ground floor.'],
 
     ['What are your opening hours?',
-     'Monday to Saturday, 10:00 AM to 1:00 PM in the morning and 5:00 PM to 9:00 PM in the evening. We are closed on Sundays. You can book any available slot online up to 30 days in advance.'],
+     'We are open {hours}. You can book any available slot online up to {window} days in advance.'],
 
     ['Do I need an appointment, or can I walk in?',
      'Walk-ins are welcome but you may have to wait. Booking online takes under a minute, confirms your slot immediately, and means you are seen at the time you chose.'],
@@ -422,4 +422,32 @@ function service(string $slug): ?array
 function featured_services(): array
 {
     return array_filter(SERVICES, static fn(array $s) => $s['featured']);
+}
+
+/**
+ * GENERAL_FAQS with its runtime tokens resolved.
+ *
+ * GENERAL_FAQS has to be a const, so it cannot call anything — but the hours
+ * answer must never contradict the times the booking engine actually offers.
+ * {hours} and {window} are therefore filled in here, from the same OPENING_HOURS
+ * and BOOKING_WINDOW_DAYS the slot engine reads. Always use this, not the const.
+ *
+ * @return array<int, array{0:string, 1:string}>
+ */
+function general_faqs(): array
+{
+    static $out = null;
+    if ($out === null) {
+        $subs = [
+            '{hours}'    => hours_inline(),
+            '{window}'   => (string) BOOKING_WINDOW_DAYS,
+            '{address}'  => full_address(),
+            '{landmark}' => lcfirst(CLINIC['landmark']),
+        ];
+        $out  = array_map(
+            static fn(array $qa): array => [$qa[0], strtr($qa[1], $subs)],
+            GENERAL_FAQS
+        );
+    }
+    return $out;
 }

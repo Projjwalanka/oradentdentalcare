@@ -93,7 +93,7 @@ function schema_organization(): array
         'openingHoursSpecification' => $openingSpec,
         'areaServed' => array_map(
             static fn(string $a) => ['@type' => 'Place', 'name' => $a],
-            ['Sonarpur', 'Rabindra Nagar', 'Narendrapur', 'Garia', 'Baruipur', 'Kolkata']
+            ['Parnasree', 'Behala', 'Barisha', 'Sakher Bazar', 'Thakurpukur', 'Joka', 'Kolkata']
         ),
         'availableService' => array_values(array_map(
             static fn(string $slug, array $s) => [

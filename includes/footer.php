@@ -64,9 +64,14 @@
           <li><a href="<?= e(tel_link()) ?>"><?= e(CLINIC['phone_display']) ?></a></li>
           <li><a href="mailto:<?= e(CLINIC['email']) ?>"><?= e(CLINIC['email']) ?></a></li>
           <li style="margin-top:.4rem">
-            <strong style="color:#fff">Mon – Sat</strong><br>
-            10:00 AM – 1:00 PM<br>5:00 PM – 9:00 PM<br>
-            <span style="color:#7f93b4">Sunday closed</span>
+            <?php foreach (hours_summary() as $row): ?>
+              <strong style="color:#fff"><?= e($row['days']) ?></strong><br>
+              <?php if ($row['open']): ?>
+                <?php foreach ($row['sessions'] as $s): ?><?= e($s) ?><br><?php endforeach; ?>
+              <?php else: ?>
+                <span style="color:#7f93b4">Closed</span><br>
+              <?php endif; ?>
+            <?php endforeach; ?>
           </li>
         </ul>
       </div>

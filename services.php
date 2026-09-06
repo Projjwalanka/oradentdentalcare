@@ -4,8 +4,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/seo.php';
 
 Page::$path        = '/services';
-Page::$title       = 'Dental Treatments in Sonarpur, Kolkata | ORADENT Dental Care';
-Page::$description = 'Root canal treatment, dental implants, oral surgery, extractions, scaling, fillings, cosmetic and children\'s dentistry in Sonarpur, Kolkata. See what each treatment involves and book online.';
+Page::$title       = 'Dental Treatments in Parnasree, Behala, Kolkata | ORADENT Dental Care';
+Page::$description = 'Root canal treatment, dental implants, oral surgery, extractions, scaling, fillings, cosmetic and children\'s dentistry in Parnasree, Behala, Kolkata. See what each treatment involves and book online.';
 Page::$breadcrumbs = [
     ['name' => 'Home',     'url' => url()],
     ['name' => 'Services', 'url' => url('services')],

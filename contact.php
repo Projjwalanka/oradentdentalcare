@@ -5,8 +5,10 @@ require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/seo.php';
 
 Page::$path        = '/contact';
-Page::$title       = 'Contact & Directions | ORADENT Dental Care, Sonarpur, Kolkata';
-Page::$description = 'Contact ORADENT Dental Care, Sonarpur, Kolkata 700103 — phone +91 98301 69230, WhatsApp, directions to Alap Apartment on Maharani Indira Devy Road, and opening hours.';
+Page::$title       = 'Contact & Directions | ORADENT Dental Care, Parnasree, Behala, Kolkata';
+Page::$description = 'Contact ORADENT Dental Care, ' . CLINIC['locality'] . ', ' . CLINIC['city'] . ' ' . CLINIC['postal']
+                   . ' — phone ' . CLINIC['phone_display'] . ', WhatsApp, directions to ' . CLINIC['street']
+                   . ', and opening hours.';
 Page::$breadcrumbs = [
     ['name' => 'Home',    'url' => url()],
     ['name' => 'Contact', 'url' => url('contact')],
@@ -61,8 +63,8 @@ require __DIR__ . '/includes/header.php';
       <ol><li><a href="/">Home</a></li><li>Contact</li></ol>
     </nav>
     <h1>Contact &amp; directions</h1>
-    <p>We are on Maharani Indira Devy Road in <?= e(CLINIC['locality']) ?>, right by the Rabindra Nagar
-       auto stand — near Sakshi Baban, opposite Gurunan Math.</p>
+    <p>We are at <?= e(CLINIC['street']) ?> in <?= e(CLINIC['locality']) ?>,
+       <?= e(lcfirst(CLINIC['landmark'])) ?>.</p>
   </div>
 </div>
 

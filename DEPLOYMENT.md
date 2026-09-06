@@ -105,25 +105,29 @@ Delete the test booking row in phpMyAdmin when you are done.
    page URL. You should see *Local Business* and *FAQ* detected.
 3. **Google Business Profile** — see the warning below.
 
-### ⚠ Your Google listing and this site currently disagree
+### ⚠ Your Google listing and this site still disagree on the street address
 
 Your Business Profile is pinned at
 **48, Maharani Indira Devi Rd, Parnasree Palli, Behala, Kolkata 700060**,
 with hours of **9:30 AM–2 PM and 5:30–9 PM, all seven days**.
 
-This website uses the address and hours from your clinic signage:
-**Alap Apartment, 105 Maharani Indira Devy Road, Rabindra Nagar Auto Stand,
-Sonarpur, Kolkata 700103**, open **Mon–Sat, 10 AM–1 PM and 5–9 PM**.
+**Hours and area now match Google** — the site is set to those hours, every day,
+and every page says Parnasree, Behala.
+
+**The street line and postcode do not yet match.** The site still carries the
+address from the clinic signage: **Alap Apartment, 105 Maharani Indira Devy Road,
+Rabindra Nagar Auto Stand … 700103**. Note that 700103 is the Sonarpur PIN, while
+Parnasree Palli is 700060 — so the current combination cannot be right.
 
 Google weighs name/address/phone consistency heavily in local ranking, and a
 mismatch also sends patients to the wrong place. **Pick whichever is correct and
 make both match.**
 
-- If the signage is right → update the address and hours on your Google Business
-  Profile, and re-drop the map pin at the real location.
-- If Google is right → change `CLINIC` and `OPENING_HOURS` in
+- If the signage is right → update the address on your Google Business Profile
+  and re-drop the map pin at the real location.
+- If Google is right → change `street` and `postal` in `CLINIC` in
   `config/config.php`, commit, and push. Every page, the schema markup and the
-  booking slots update together.
+  sitemap update together.
 
 Also worth doing while you are there: set the primary category to **Dental clinic**,
 add the secondary categories *Dentist*, *Dental implants periodontist*, *Oral surgeon*,

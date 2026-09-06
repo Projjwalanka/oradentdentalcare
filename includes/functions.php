@@ -110,17 +110,57 @@ function hours_summary(): array
     $rows[] = $run;
 
     return array_map(static function (array $r) use ($names): array {
+        $full  = $r['from'] === $r['to']
+            ? $names[$r['from']]
+            : $names[$r['from']] . ' – ' . $names[$r['to']];
         $label = $r['from'] === $r['to']
             ? $names[$r['from']]
             : substr($names[$r['from']], 0, 3) . ' – ' . substr($names[$r['to']], 0, 3);
-        $times = $r['sessions']
-            ? implode(', ', array_map(
-                static fn(array $s) => fmt_time($s[0]) . ' – ' . fmt_time($s[1]),
-                $r['sessions']
-            ))
-            : 'Closed';
-        return ['days' => $label, 'times' => $times, 'open' => (bool) $r['sessions']];
+        $list  = array_map(
+            static fn(array $s) => fmt_time($s[0]) . ' – ' . fmt_time($s[1]),
+            $r['sessions']
+        );
+        return [
+            'days'      => $label,
+            'days_full' => $full,
+            'times'     => $list ? implode(', ', $list) : 'Closed',
+            'sessions'  => $list,
+            'open'      => (bool) $r['sessions'],
+        ];
     }, $rows);
+}
+
+/**
+ * Opening hours on one line, e.g. "Mon – Sun, 9:30 AM – 2:00 PM & 5:30 PM – 9:00 PM".
+ *
+ * Every piece of running copy that quotes the hours calls this instead of
+ * spelling them out. Hard-coded hours are how a site ends up advertising times
+ * the booking engine will not actually offer.
+ */
+function hours_inline(): string
+{
+    $parts = [];
+    foreach (hours_summary() as $row) {
+        $parts[] = $row['open']
+            ? $row['days'] . ', ' . implode(' & ', $row['sessions'])
+            : $row['days'] . ' closed';
+    }
+    return implode(' · ', $parts);
+}
+
+/** "The clinic is closed on Sundays." — empty string when it is open all week. */
+function closed_days_sentence(): string
+{
+    $shut = [];
+    foreach (hours_summary() as $row) {
+        if (!$row['open']) {
+            $shut[] = $row['days_full'];
+        }
+    }
+    if (!$shut) {
+        return '';
+    }
+    return 'The clinic is closed on ' . implode(' and ', $shut) . '.';
 }
 
 function fmt_time(string $hhmm): string

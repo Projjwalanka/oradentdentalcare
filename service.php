@@ -99,7 +99,7 @@ require __DIR__ . '/includes/header.php';
         <div class="aside-card">
           <h3>Book this treatment</h3>
           <ul>
-            <li><?= icon('clock') ?><span>Mon–Sat · 10 AM–1 PM &amp; 5–9 PM</span></li>
+            <li><?= icon('clock') ?><span><?= e(hours_inline()) ?></span></li>
             <li><?= icon('calendar') ?><span>Slots open <?= BOOKING_WINDOW_DAYS ?> days ahead</span></li>
             <li><?= icon('pin') ?><span><?= e(CLINIC['locality'] . ', ' . CLINIC['city']) ?></span></li>
           </ul>

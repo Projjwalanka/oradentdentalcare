@@ -1,7 +1,7 @@
 # ORADENT Dental Care — website
 
 Source for **https://oradentdentalcare.com** — the website of ORADENT Dental Care,
-Dr. Nabanita Chaklader BDS (WBUHS), Sonarpur, Kolkata.
+Dr. Nabanita Chaklader BDS (WBUHS), Parnasree, Behala, Kolkata.
 
 Plain PHP 8 + MySQL, no framework and no build step, so Hostinger can deploy it
 straight from this repository.
@@ -13,7 +13,7 @@ straight from this repository.
 | Area | Detail |
 |---|---|
 | **Pages** | Home, About the doctor, Services index + 8 individual treatment pages, Clinic gallery, FAQ, Contact, Book, Privacy, Terms, 404 |
-| **Booking** | Bookable slots, Mon–Sat 10:00–13:00 and 17:00–21:00, bookable 30 days ahead, **instant confirmation**, database-level protection against double booking |
+| **Booking** | Bookable slots, every day 09:30–14:00 and 17:30–21:00, bookable 30 days ahead, **instant confirmation**, database-level protection against double booking |
 | **Admin** | Password-protected dashboard: today/tomorrow lists, searchable appointment log, status changes, CSV export, day/slot blocking, patient messages |
 | **SEO** | `Dentist` + `Person` + `WebSite` + `BreadcrumbList` + `FAQPage` + `MedicalProcedure` JSON-LD, per-page titles and meta, canonicals, Open Graph, XML sitemap, robots.txt |
 | **Performance** | One CSS file, ~4 KB of JS, no web fonts, WebP with JPEG fallback, immutable asset caching, gzip |

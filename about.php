@@ -4,8 +4,8 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/seo.php';
 
 Page::$path        = '/about';
-Page::$title       = 'Dr. Nabanita Chaklader, BDS (WBUHS) | Dentist in Sonarpur, Kolkata — ORADENT';
-Page::$description = 'Meet Dr. Nabanita Chaklader, BDS (WBUHS) — dental surgeon at ORADENT Dental Care, Sonarpur, Kolkata, with special interests in root canal treatment and oral & maxillofacial surgery.';
+Page::$title       = 'Dr. Nabanita Chaklader, BDS (WBUHS) | Dentist in Parnasree, Behala, Kolkata — ORADENT';
+Page::$description = 'Meet Dr. Nabanita Chaklader, BDS (WBUHS) — dental surgeon at ORADENT Dental Care, Parnasree, Behala, Kolkata, with special interests in root canal treatment and oral & maxillofacial surgery.';
 Page::$image       = '/assets/img/dr-nabanita-chaklader-1200.jpg';
 Page::$type        = 'profile';
 Page::$breadcrumbs = [
@@ -34,7 +34,7 @@ require __DIR__ . '/includes/header.php';
         <source type="image/webp" srcset="/assets/img/dr-nabanita-chaklader-800.webp 800w, /assets/img/dr-nabanita-chaklader-1200.webp 1200w"
                 sizes="(min-width: 900px) 38vw, 92vw">
         <img src="/assets/img/dr-nabanita-chaklader-800.jpg" width="800" height="1000"
-             alt="Dr. Nabanita Chaklader, BDS (WBUHS), dental surgeon and founder of ORADENT Dental Care, Sonarpur, Kolkata"
+             alt="Dr. Nabanita Chaklader, BDS (WBUHS), dental surgeon and founder of ORADENT Dental Care, Parnasree, Behala, Kolkata"
              fetchpriority="high" decoding="async">
       </picture>
     </div>

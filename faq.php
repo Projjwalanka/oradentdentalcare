@@ -3,7 +3,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/includes/seo.php';
 
 /* Every service FAQ is folded in so this page answers the long tail too. */
-$all = GENERAL_FAQS;
+$all = general_faqs();
 foreach (SERVICES as $slug => $s) {
     foreach ($s['faqs'] as [$q, $a]) {
         $all[] = [$s['name'] . ': ' . $q, $a];
@@ -11,8 +11,8 @@ foreach (SERVICES as $slug => $s) {
 }
 
 Page::$path        = '/faq';
-Page::$title       = 'Patient FAQs | ORADENT Dental Care, Sonarpur, Kolkata';
-Page::$description = 'Answers to the questions patients ask most — opening hours, booking, costs, root canals, extractions, implants, children\'s dentistry and sterilisation at ORADENT Dental Care, Sonarpur.';
+Page::$title       = 'Patient FAQs | ORADENT Dental Care, Parnasree, Behala, Kolkata';
+Page::$description = 'Answers to the questions patients ask most — opening hours, booking, costs, root canals, extractions, implants, children\'s dentistry and sterilisation at ORADENT Dental Care, Parnasree, Behala.';
 Page::$faqs        = array_slice($all, 0, 30);
 Page::$breadcrumbs = [
     ['name' => 'Home', 'url' => url()],
@@ -40,7 +40,7 @@ require __DIR__ . '/includes/header.php';
       <div>
         <h2 style="margin-top:0">About visiting the clinic</h2>
         <div class="faq">
-          <?php foreach (GENERAL_FAQS as $i => [$q, $a]): ?>
+          <?php foreach (general_faqs() as $i => [$q, $a]): ?>
           <details class="faq__item"<?= $i === 0 ? ' open' : '' ?>>
             <summary><?= e($q) ?></summary>
             <div class="faq__answer"><?= e($a) ?></div>

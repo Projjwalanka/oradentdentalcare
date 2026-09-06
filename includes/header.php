@@ -77,11 +77,11 @@ $navItems = [
     <span class="topbar__item">
       <span class="status-dot<?= $open ? '' : ' status-dot--shut' ?>" aria-hidden="true"></span>
       <?= $open ? 'Open now' : 'Currently closed' ?>
-      <span class="topbar__hide-sm">&nbsp;· Mon–Sat, 10 AM–1 PM &amp; 5–9 PM</span>
+      <span class="topbar__hide-sm">&nbsp;· <?= e(hours_inline()) ?></span>
     </span>
     <div class="topbar__right">
       <a class="topbar__item topbar__hide-sm" href="<?= e(CLINIC['maps_url']) ?>" target="_blank" rel="noopener">
-        <?= icon('pin') ?><?= e(CLINIC['area_display']) ?>
+        <?= icon('pin') ?><?= e(CLINIC['locality']) ?>
       </a>
       <a class="topbar__item" href="<?= e(tel_link()) ?>">
         <?= icon('phone') ?><?= e(CLINIC['phone_display']) ?>
@@ -141,7 +141,9 @@ $navItems = [
     </div>
     <p class="drawer__meta">
       <?= e(CLINIC['street']) ?><br><?= e(CLINIC['locality'] . ', ' . CLINIC['city'] . ' ' . CLINIC['postal']) ?><br>
-      <strong>Mon–Sat</strong> 10 AM–1 PM &amp; 5–9 PM
+      <?php foreach (hours_summary() as $row): ?>
+        <strong><?= e($row['days']) ?></strong> <?= e($row['open'] ? implode(' & ', $row['sessions']) : 'Closed') ?><br>
+      <?php endforeach; ?>
     </p>
   </div>
 </div>

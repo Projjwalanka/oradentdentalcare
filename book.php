@@ -5,8 +5,10 @@ require_once __DIR__ . '/includes/booking.php';
 require_once __DIR__ . '/includes/seo.php';
 
 Page::$path        = '/book';
-Page::$title       = 'Book a Dental Appointment in Sonarpur, Kolkata | ORADENT Dental Care';
-Page::$description = 'Book your dental appointment at ORADENT Dental Care, Sonarpur, Kolkata. Pick a free slot up to 30 days ahead and get instant confirmation. Mon–Sat, 10 AM–1 PM and 5–9 PM.';
+Page::$title       = 'Book a Dental Appointment in Parnasree, Behala, Kolkata | ORADENT Dental Care';
+Page::$description = 'Book your dental appointment at ORADENT Dental Care, ' . CLINIC['locality'] . ', ' . CLINIC['city']
+                   . '. Pick a free slot up to ' . BOOKING_WINDOW_DAYS . ' days ahead and get instant confirmation. '
+                   . hours_inline() . '.';
 Page::$breadcrumbs = [
     ['name' => 'Home', 'url' => url()],
     ['name' => 'Book an appointment', 'url' => url('book')],
@@ -107,7 +109,7 @@ require __DIR__ . '/includes/header.php';
               </div>
               <p class="field__hint">
                 Bookings open <?= BOOKING_WINDOW_DAYS ?> days ahead
-                (until <?= e($winEnd->format('j M Y')) ?>). The clinic is closed on Sundays.
+                (until <?= e($winEnd->format('j M Y')) ?>). <?= e(closed_days_sentence()) ?>
               </p>
               <?php if (isset($formErrors['date'])): ?>
                 <p class="field__error"><?= e($formErrors['date']) ?></p>
