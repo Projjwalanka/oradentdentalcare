@@ -81,11 +81,29 @@ function db_available(): bool
 function db_diagnosis(): array
 {
     $envFile = dirname(__DIR__) . '/.env';
-    if (!is_readable($envFile)) {
+    $envDir  = basename(dirname($envFile));
+
+    // A folder called .env is an easy mistake to make in File Manager, and it
+    // looks identical to a working setup in a directory listing.
+    if (is_dir($envFile)) {
+        $inside = array_values(array_diff(scandir($envFile) ?: [], ['.', '..']));
+        return [
+            'ok'     => false,
+            'reason' => '.env is a folder, not a file',
+            'detail' => 'Found a directory at ' . $envDir . '/.env'
+                      . ($inside ? ' containing ' . implode(', ', array_slice($inside, 0, 5)) . '.' : '.')
+                      . ' The settings must be in a single file named .env, not inside a folder of that name.',
+            'fix'    => 'Move the settings out: create one file called exactly ".env" directly in '
+                      . $envDir . ' (beside index.php), paste the DB_ lines into it, then delete the '
+                      . '.env folder. The name matters — .env.prod, env.txt or .env.php are not read.',
+        ];
+    }
+
+    if (!is_file($envFile) || !is_readable($envFile)) {
         return [
             'ok'     => false,
             'reason' => 'No .env file',
-            'detail' => 'Expected it at ' . basename(dirname($envFile)) . '/.env on the server.',
+            'detail' => 'Expected a file at ' . $envDir . '/.env on the server.',
             'fix'    => 'Create .env in the same folder as index.php (public_html), '
                       . 'copying .env.example and filling in the real database name, '
                       . 'user and password. Turn on "show hidden files" in File Manager '
