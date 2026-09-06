@@ -13,11 +13,21 @@ admin_session();
 $count = admin_count();
 
 if ($count === -1) {
+    /*
+     * "Database not reachable" on its own sends people hunting in the wrong
+     * place, so say which of the four fresh-deploy mistakes this actually is.
+     */
+    $d = db_diagnosis();
+
     admin_head('Setup');
     echo '<div class="login-wrap"><div class="login-card">'
-       . '<h1>Database not reachable</h1>'
-       . '<p class="login-lede">Check the credentials in your <code>.env</code> file and that the '
-       . 'database has been created and <code>sql/schema.sql</code> imported.</p></div></div>';
+       . '<h1>' . e($d['reason']) . '</h1>'
+       . ($d['detail'] !== '' ? '<p class="login-lede">' . e($d['detail']) . '</p>' : '')
+       . '<div class="alert alert--bad" role="alert">' . e($d['fix']) . '</div>'
+       . '<p class="login-lede" style="margin-bottom:0">The website itself keeps working while '
+       . 'this is unfixed — only online booking and this admin panel need the database. '
+       . 'Reload this page once you have made the change.</p>'
+       . '</div></div>';
     admin_foot();
     exit;
 }

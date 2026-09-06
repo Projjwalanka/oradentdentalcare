@@ -68,6 +68,19 @@ require __DIR__ . '/includes/header.php';
   </div>
 </section>
 
+<!-- ------------------------------------------------------------- slider -->
+<section class="section" id="clinic-photos">
+  <div class="wrap">
+    <div class="section-head section-head--center">
+      <span class="eyebrow">A look around</span>
+      <h2>The clinic you will actually walk into</h2>
+      <p>The treatment room, the equipment and the people &mdash; photographed here,
+         not bought from a stock library.</p>
+    </div>
+    <?php showcase(slider_images(), 'Inside ORADENT Dental Care'); ?>
+  </div>
+</section>
+
 <!-- ------------------------------------------------------------ services -->
 <section class="section" id="services">
   <div class="wrap">
@@ -168,13 +181,11 @@ require __DIR__ . '/includes/header.php';
 <section class="section section--tint" id="clinic">
   <div class="wrap">
     <div class="section-head section-head--center">
-      <span class="eyebrow">Inside the clinic</span>
+      <span class="eyebrow">Our standards</span>
       <h2>Built around hygiene and doing things properly</h2>
-      <p>A look at where you will be treated, and the standards the clinic runs to
-         &mdash; sterilisation, equipment, and how treatment decisions get made.</p>
+      <p>Sterilisation, equipment and how treatment decisions get made &mdash; the parts
+         of a clinic that matter most and are hardest to see.</p>
     </div>
-
-    <?php showcase(slider_images(), 'Inside ORADENT Dental Care'); ?>
 
     <div class="grid grid--3 mt-3">
       <?php foreach (CLINIC_FEATURES as $f): ?>

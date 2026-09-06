@@ -7,6 +7,23 @@ header('Cache-Control: no-store, max-age=0');
 
 $date = (string) ($_GET['date'] ?? '');
 
+/*
+ * Without this the endpoint happily reports every slot as free when the database
+ * is down — because "nothing is booked" and "we cannot see what is booked" look
+ * identical to available_slots(). The patient would then pick a time, submit,
+ * and be refused. Better to say so before they type anything.
+ */
+if (!db_available()) {
+    header('Retry-After: 300');
+    json_out([
+        'ok'      => false,
+        'reason'  => 'unavailable',
+        'message' => 'Online booking is temporarily unavailable. Please call '
+                   . CLINIC_PHONE_DISPLAY . ' and we will book you in.',
+        'slots'   => [],
+    ], 503);
+}
+
 if (!date_is_bookable($date)) {
     // Distinguish "closed that day" from "outside the booking window" so the UI
     // can say something useful instead of a generic error.

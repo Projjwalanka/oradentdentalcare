@@ -71,6 +71,8 @@ const CLINIC = [
     // The immediate neighbourhood patients recognise — used where a hyper-local
     // label reads better than the postal locality (e.g. the hero badge).
     'neighbourhood'   => 'Rabindra Nagar',
+    // Short "where we are" label shown in the top bar and footer link.
+    'area_display'    => 'Parnasree, Behala',
     'region'          => 'West Bengal',
     'region_code'     => 'WB',
     'postal'          => '700103',

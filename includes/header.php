@@ -81,7 +81,7 @@ $navItems = [
     </span>
     <div class="topbar__right">
       <a class="topbar__item topbar__hide-sm" href="<?= e(CLINIC['maps_url']) ?>" target="_blank" rel="noopener">
-        <?= icon('pin') ?><?= e(CLINIC['locality'] . ', ' . CLINIC['city']) ?>
+        <?= icon('pin') ?><?= e(CLINIC['area_display']) ?>
       </a>
       <a class="topbar__item" href="<?= e(tel_link()) ?>">
         <?= icon('phone') ?><?= e(CLINIC['phone_display']) ?>
