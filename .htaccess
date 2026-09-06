@@ -98,8 +98,18 @@ RedirectMatch 404 /(config|sql|tools)/.*\.(php|sql|py)$
   <FilesMatch "\.(css|js|webp|jpg|jpeg|png|svg|woff2)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
+  # HTML must never be held by a shared cache.
+  #
+  # Hostinger's CDN ("server: hcdn") was caught serving a 19-hour-old copy of the
+  # home page with "cache-control: public, s-maxage=604800" — a seven-day edge
+  # TTL — which kept a stale page live long after the real one was deployed.
+  # "no-cache" alone does not prevent a shared cache from STORING a response, so
+  # be explicit: "private" forbids shared storage and "s-maxage=0" expires any
+  # copy an intermediary keeps anyway. Pages here are dynamic (booking slots,
+  # CSRF tokens, open/closed status), so none of them may be cached at an edge.
   <FilesMatch "\.(php|html)$">
-    Header set Cache-Control "no-cache, must-revalidate"
+    Header always set Cache-Control "private, no-store, no-cache, must-revalidate, max-age=0, s-maxage=0"
+    Header always set Pragma "no-cache"
   </FilesMatch>
 </IfModule>
 
