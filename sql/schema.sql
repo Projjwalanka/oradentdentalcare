@@ -94,3 +94,26 @@ CREATE TABLE IF NOT EXISTS `contact_messages` (
   PRIMARY KEY (`id`),
   KEY `idx_read_created` (`is_read`, `created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------- ui_events ----
+-- First-party click tracking. No cookies, no third-party script, no personal
+-- data: just which action was taken, from where, and when. That is enough to
+-- answer "is the site producing bookings?" without needing a consent banner.
+--
+-- `source`  where on the page the click came from (hero, sticky_bar, footer…)
+-- `detail`  the service slug for a service-card click, otherwise NULL
+-- `day`     generated, so the dashboard can group by date without a function
+--           on the column defeating the index
+CREATE TABLE IF NOT EXISTS `ui_events` (
+  `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `event`      VARCHAR(40)  NOT NULL,
+  `source`     VARCHAR(40)  DEFAULT NULL,
+  `detail`     VARCHAR(60)  DEFAULT NULL,
+  `path`       VARCHAR(190) DEFAULT NULL,
+  `is_mobile`  TINYINT(1)   NOT NULL DEFAULT 0,
+  `created_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `day`        DATE GENERATED ALWAYS AS (DATE(`created_at`)) STORED,
+  PRIMARY KEY (`id`),
+  KEY `idx_day_event` (`day`, `event`),
+  KEY `idx_event_created` (`event`, `created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -22,7 +22,7 @@ $navItems = [
     '/'          => 'Home',
     '/about'     => 'About',
     '/services'  => 'Services',
-    '/gallery'   => 'Clinic',
+    '/gallery'   => 'Gallery',
     '/faq'       => 'FAQ',
     '/contact'   => 'Contact',
 ];
@@ -81,10 +81,12 @@ $navItems = [
 <span class="topbar__hide-sm"><?= $status['detail'] !== '' ? ' ' . e($status['detail']) : '' ?> · <?= e(hours_inline()) ?></span>
     </span>
     <div class="topbar__right">
-      <a class="topbar__item topbar__hide-sm" href="<?= e(CLINIC['maps_url']) ?>" target="_blank" rel="noopener">
+      <a class="topbar__item topbar__hide-sm" href="<?= e(CLINIC['maps_url']) ?>" target="_blank" rel="noopener"
+         data-track="directions_click" data-track-source="topbar">
         <?= icon('pin') ?><?= e(CLINIC['locality']) ?>
       </a>
-      <a class="topbar__item" href="<?= e(tel_link()) ?>">
+      <a class="topbar__item" href="<?= e(tel_link()) ?>"
+         data-track="call_click" data-track-source="topbar">
         <?= icon('phone') ?><?= e(CLINIC['phone_display']) ?>
       </a>
     </div>
@@ -119,7 +121,8 @@ $navItems = [
       </ul>
     </nav>
 
-    <a class="btn btn--primary header__cta" href="/book">
+    <a class="btn btn--primary header__cta" href="/book"
+       data-track="book_click" data-track-source="header">
       <?= icon('calendar') ?> Book Appointment
     </a>
 
@@ -140,9 +143,12 @@ $navItems = [
       <a class="drawer__link" href="<?= e($href) ?>"<?= is_active($href) && ($href !== '/' || current_path() === '/') ? ' aria-current="page"' : '' ?>><?= e($label) ?></a>
     <?php endforeach; ?>
     <div class="drawer__actions">
-      <a class="btn btn--primary btn--block" href="/book"><?= icon('calendar') ?> Book Appointment</a>
-      <a class="btn btn--wa btn--block" href="<?= e(whatsapp_link()) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?> WhatsApp us</a>
-      <a class="btn btn--ghost btn--block" href="<?= e(tel_link()) ?>"><?= icon('phone') ?> <?= e(CLINIC['phone_display']) ?></a>
+      <a class="btn btn--primary btn--block" href="/book"
+         data-track="book_click" data-track-source="drawer"><?= icon('calendar') ?> Book Appointment</a>
+      <a class="btn btn--wa btn--block" href="<?= e(whatsapp_link()) ?>" target="_blank" rel="noopener"
+         data-track="whatsapp_click" data-track-source="drawer"><?= icon('whatsapp') ?> WhatsApp us</a>
+      <a class="btn btn--ghost btn--block" href="<?= e(tel_link()) ?>"
+         data-track="call_click" data-track-source="drawer"><?= icon('phone') ?> <?= e(CLINIC['phone_display']) ?></a>
     </div>
     <p class="drawer__meta">
       <?= e(CLINIC['street']) ?><br><?= e(CLINIC['locality'] . ', ' . CLINIC['city'] . ' ' . CLINIC['postal']) ?><br>

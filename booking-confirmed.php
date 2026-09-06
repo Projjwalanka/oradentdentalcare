@@ -30,7 +30,10 @@ require __DIR__ . '/includes/header.php';
           there is nothing else to do. Please arrive about five minutes early.
         </p>
 
-        <div class="ref-badge"><?= e($booking['reference']) ?></div>
+        <?php /* The only place we know a booking actually completed — main.js
+                  reports it once on load. See api/track.php. */ ?>
+        <div class="ref-badge" data-booking-complete
+             data-service="<?= e((string) ($booking['service_slug'] ?? '')) ?>"><?= e($booking['reference']) ?></div>
 
         <div class="summary-box" style="text-align:left">
           <dl>

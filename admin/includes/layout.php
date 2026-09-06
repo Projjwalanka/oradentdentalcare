@@ -13,6 +13,7 @@ function admin_head(string $title, ?array $user = null): void
         '/admin/appointments.php' => ['Appointments', 'clock'],
         '/admin/blocks.php'    => ['Block time',  'close'],
         '/admin/messages.php'  => ['Messages',    'mail'],
+        '/admin/analytics.php' => ['Insights',    'star'],
     ];
     $cur = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
     ?>

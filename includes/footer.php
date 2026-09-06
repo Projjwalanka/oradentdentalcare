@@ -45,7 +45,7 @@
         <h4>Clinic</h4>
         <ul>
           <li><a href="/about">About Dr. Chaklader</a></li>
-          <li><a href="/gallery">Inside the clinic</a></li>
+          <li><a href="/gallery">Gallery &amp; videos</a></li>
           <li><a href="/faq">Patient FAQs</a></li>
           <li><a href="/book">Book an appointment</a></li>
           <li><a href="/contact">Contact &amp; directions</a></li>
@@ -90,9 +90,10 @@
 </footer>
 
 <nav class="mobile-bar" aria-label="Quick actions">
-  <a href="<?= e(tel_link()) ?>"><?= icon('phone') ?> Call</a>
-  <a class="is-wa" href="<?= e(whatsapp_link()) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?> WhatsApp</a>
-  <a class="is-book" href="/book"><?= icon('calendar') ?> Book</a>
+  <a href="<?= e(tel_link()) ?>" data-track="call_click" data-track-source="sticky_bar"><?= icon('phone') ?> Call</a>
+  <a class="is-wa" href="<?= e(whatsapp_link()) ?>" target="_blank" rel="noopener"
+     data-track="whatsapp_click" data-track-source="sticky_bar"><?= icon('whatsapp') ?> WhatsApp</a>
+  <a class="is-book" href="/book" data-track="book_click" data-track-source="sticky_bar"><?= icon('calendar') ?> Book</a>
 </nav>
 
 <script src="<?= e(asset('assets/js/main.js')) ?>" defer></script>

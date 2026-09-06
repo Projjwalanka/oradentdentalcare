@@ -32,9 +32,12 @@ function showcase(array $items, string $label = 'Clinic photos', bool $autoplay 
           <div class="showcase__slide" role="group" aria-roledescription="slide"
                aria-label="<?= $i + 1 ?> of <?= $total ?>">
             <?php if (($m['type'] ?? 'image') === 'video'): ?>
+              <?php /* Folder-driven: src and poster come from assets/media/videos/
+                        via media_videos(). preload="none" so a gallery of clips
+                        costs nothing until one is actually played. */ ?>
               <video controls preload="none" playsinline
-                     <?= !empty($m['file']) ? 'poster="/assets/img/' . e($m['file']) . '-1200.jpg"' : '' ?>>
-                <source src="/assets/video/<?= e($m['video']) ?>" type="video/mp4">
+                     <?= !empty($m['poster']) ? 'poster="' . e($m['poster']) . '"' : '' ?>>
+                <source src="<?= e($m['src'] ?? ('/assets/video/' . ($m['video'] ?? ''))) ?>" type="video/mp4">
                 <?= e($m['alt']) ?>
               </video>
 
