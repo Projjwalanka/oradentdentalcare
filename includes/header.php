@@ -10,7 +10,8 @@ session_start_once();
 
 $title = Page::$title !== '' ? Page::$title : CLINIC['name'] . ' | Dental Clinic in ' . CLINIC['locality'] . ', ' . CLINIC['city'];
 $desc  = Page::$description;
-$open  = is_open_now();
+$status = open_status();
+$open   = $status['open'];
 
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: strict-origin-when-cross-origin');
@@ -76,8 +77,8 @@ $navItems = [
   <div class="wrap topbar__in">
     <span class="topbar__item">
       <span class="status-dot<?= $open ? '' : ' status-dot--shut' ?>" aria-hidden="true"></span>
-      <?= $open ? 'Open now' : 'Currently closed' ?>
-      <span class="topbar__hide-sm">&nbsp;· <?= e(hours_inline()) ?></span>
+      <?= e($status['label']) ?>
+<span class="topbar__hide-sm"><?= $status['detail'] !== '' ? ' ' . e($status['detail']) : '' ?> · <?= e(hours_inline()) ?></span>
     </span>
     <div class="topbar__right">
       <a class="topbar__item topbar__hide-sm" href="<?= e(CLINIC['maps_url']) ?>" target="_blank" rel="noopener">
@@ -87,6 +88,10 @@ $navItems = [
         <?= icon('phone') ?><?= e(CLINIC['phone_display']) ?>
       </a>
     </div>
+
+    <?php /* Small screens have no room for the hours beside the status, so they
+             wrap onto their own full-width row rather than disappearing. */ ?>
+    <span class="topbar__hours-sm"><?= e(hours_inline()) ?></span>
   </div>
 </div>
 

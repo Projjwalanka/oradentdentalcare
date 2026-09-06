@@ -182,6 +182,49 @@ function is_open_now(?DateTimeImmutable $now = null): bool
     return false;
 }
 
+/**
+ * Live status with the next thing that actually happens.
+ *
+ * "Currently closed" on its own reads as "do not bother" — but at 3 PM on a
+ * working day the clinic reopens in two and a half hours, and at 9 PM it reopens
+ * tomorrow morning. Telling the patient *when* is the difference between them
+ * waiting and them going elsewhere, and it is the only hours information small
+ * screens have room for.
+ *
+ * @return array{open:bool, label:string, detail:string}
+ */
+function open_status(?DateTimeImmutable $now = null): array
+{
+    $now     = $now ?? new DateTimeImmutable('now');
+    $minutes = (int) $now->format('G') * 60 + (int) $now->format('i');
+
+    // Open right now — say when this session ends.
+    foreach (OPENING_HOURS[(int) $now->format('N')] ?? [] as [$from, $to]) {
+        if ($minutes >= hhmm_to_min($from) && $minutes < hhmm_to_min($to)) {
+            return ['open' => true, 'label' => 'Open now', 'detail' => 'until ' . fmt_time($to)];
+        }
+    }
+
+    // Otherwise walk forward to the next session that starts. Eight days covers
+    // any schedule, including one with only a single open day in the week.
+    for ($i = 0; $i <= 7; $i++) {
+        $day = $now->modify("+$i days");
+        foreach (OPENING_HOURS[(int) $day->format('N')] ?? [] as [$from, $to]) {
+            if ($i === 0 && $minutes >= hhmm_to_min($from)) {
+                continue;   // that session has already ended today
+            }
+            $when = match (true) {
+                $i === 0 => 'today',
+                $i === 1 => 'tomorrow',
+                default  => $day->format('l'),
+            };
+            return ['open' => false, 'label' => 'Opens ' . fmt_time($from) . ' ' . $when, 'detail' => ''];
+        }
+    }
+
+    return ['open' => false, 'label' => 'Currently closed', 'detail' => ''];
+}
+
 function hhmm_to_min(string $hhmm): int
 {
     [$h, $m] = array_map('intval', explode(':', $hhmm));

@@ -202,7 +202,20 @@ strong { font-weight: 700; color: var(--navy-800); }
 .topbar__item { display: inline-flex; align-items: center; gap: .42rem; }
 .topbar__item svg { width: 15px; height: 15px; opacity: .8; flex: none; }
 .topbar__right { display: flex; align-items: center; gap: 1.15rem; }
-@media (max-width: 800px) { .topbar__hide-sm { display: none; } }
+
+/* Opening hours live beside the status on wide screens and on their own wrapped
+   row below 800px — where "Currently closed" with no times used to be all a
+   phone showed. */
+.topbar__hours-sm { display: none; }
+@media (max-width: 800px) {
+  .topbar__hide-sm { display: none; }
+  .topbar__in { flex-wrap: wrap; row-gap: .1rem; padding-top: .34rem; padding-bottom: .34rem; }
+  .topbar__in > .topbar__item, .topbar__right { min-width: 0; }
+  .topbar__hours-sm {
+    display: block; flex-basis: 100%; order: 3;
+    font-size: .76rem; color: #a9bcd8; line-height: 1.35;
+  }
+}
 
 .status-dot {
   width: 8px; height: 8px; border-radius: 50%; flex: none;

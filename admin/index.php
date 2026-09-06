@@ -50,7 +50,14 @@ admin_head('Dashboard', $user);
         : $parts[0];
     ?>
     <h1>Good <?= date('G') < 12 ? 'morning' : (date('G') < 17 ? 'afternoon' : 'evening') ?>, <?= e($greet) ?></h1>
-    <p><?= e(date('l, j F Y')) ?> · The clinic is <?= is_open_now() ? '<strong style="color:var(--ok)">open now</strong>' : 'closed right now' ?>.</p>
+    <?php $st = open_status(); ?>
+    <p><?= e(date('l, j F Y')) ?> · The clinic is
+      <?php if ($st['open']): ?>
+        <strong style="color:var(--ok)">open now</strong> <?= e($st['detail']) ?>.
+      <?php else: ?>
+        closed &mdash; <?= e(lcfirst($st['label'])) ?>.
+      <?php endif; ?>
+    </p>
   </div>
   <div class="btn-row">
     <a class="btn btn--ghost btn--sm" href="/admin/appointments.php">All appointments</a>
