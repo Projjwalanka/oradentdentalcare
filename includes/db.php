@@ -136,10 +136,7 @@ function db_diagnosis(): array
                            . 'matches DB_USER in .env.'];
         }
         if (str_contains($msg, '1045') || stripos($msg, 'access denied') !== false) {
-            return ['ok' => false, 'reason' => 'Database rejected the username or password',
-                    'detail' => 'Reached the server, but DB_USER / DB_PASS were not accepted.',
-                    'fix' => 'Check DB_USER and DB_PASS in .env against hPanel → Databases. '
-                           . 'Hostinger prefixes both with your account id, e.g. u123456789_oradent.'];
+            return db_credentials_diagnosis($envDir);
         }
         if (str_contains($msg, '2002') || stripos($msg, 'connection refused') !== false) {
             return ['ok' => false, 'reason' => 'No database server at ' . DB_HOST,
@@ -160,4 +157,75 @@ function db_diagnosis(): array
     }
 
     return ['ok' => true, 'reason' => 'Connected', 'detail' => '', 'fix' => ''];
+}
+
+/**
+ * "Access denied" has several quite different causes, and they need different
+ * fixes. This inspects the *shape* of what was actually parsed out of .env —
+ * never the password itself — to say which one it is.
+ *
+ * @return array{ok:bool, reason:string, detail:string, fix:string}
+ */
+function db_credentials_diagnosis(string $envDir): array
+{
+    $prefix = static fn(string $v): ?string =>
+        preg_match('/^(u\d{6,12})_/', $v, $m) ? $m[1] : null;
+
+    $userPrefix = $prefix(DB_USER);
+    $namePrefix = $prefix(DB_NAME);
+
+    // Every value still at its built-in default means the file was found but
+    // nothing in it parsed — usually "export DB_USER=", a different key name,
+    // or the DB_ lines simply are not in this file.
+    if (DB_USER === 'root' && DB_NAME === 'oradent' && DB_PASS === '') {
+        return ['ok' => false, 'reason' => 'The .env file was found, but nothing was read from it',
+                'detail' => 'Every setting is still at its built-in default (user "root", database '
+                          . '"oradent", no password), so the connection was attempted with credentials '
+                          . 'that do not exist on this server.',
+                'fix' => 'Open ' . $envDir . '/.env and check each line reads exactly '
+                       . 'KEY=value with no "export", no spaces around the "=", and no quotes — '
+                       . 'for example DB_USER=u123456789_oradent. Lines starting with # are ignored.'];
+    }
+
+    if (str_contains(DB_PASS, 'change-this') || str_contains(DB_USER, 'uXXXXXXXX')) {
+        return ['ok' => false, 'reason' => 'The .env file still has the example values in it',
+                'detail' => 'It was copied from .env.example but the placeholders were never replaced.',
+                'fix' => 'Replace DB_NAME, DB_USER and DB_PASS in ' . $envDir . '/.env with the real '
+                       . 'values from hPanel → Databases → Management.'];
+    }
+
+    if (DB_PASS === '') {
+        return ['ok' => false, 'reason' => 'No database password was read from .env',
+                'detail' => 'DB_PASS came out empty, and this server does not accept a blank password.',
+                'fix' => 'Check the DB_PASS line in ' . $envDir . '/.env. If the password contains a '
+                       . '# the rest of that line is fine, but a line that *starts* with # is treated '
+                       . 'as a comment and skipped entirely.'];
+    }
+
+    if ($userPrefix === null && $namePrefix !== null) {
+        return ['ok' => false, 'reason' => 'DB_USER is missing the account prefix',
+                'detail' => 'DB_NAME starts with "' . $namePrefix . '_" but DB_USER does not. On '
+                          . 'Hostinger both carry the same prefix.',
+                'fix' => 'Change DB_USER in ' . $envDir . '/.env to the full name shown in hPanel → '
+                       . 'Databases, e.g. ' . $namePrefix . '_oradent.'];
+    }
+
+    if ($userPrefix !== null && $namePrefix !== null && $userPrefix !== $namePrefix) {
+        return ['ok' => false, 'reason' => 'DB_USER and DB_NAME belong to different accounts',
+                'detail' => 'DB_USER is prefixed "' . $userPrefix . '_" but DB_NAME is prefixed "'
+                          . $namePrefix . '_". One of the two was copied from somewhere else.',
+                'fix' => 'Both must come from the same row in hPanel → Databases. Correct whichever '
+                       . 'one is wrong in ' . $envDir . '/.env.'];
+    }
+
+    return ['ok' => false, 'reason' => 'The database password was not accepted',
+            'detail' => 'DB_USER ' . ($userPrefix !== null ? 'looks right (prefixed "' . $userPrefix . '_")'
+                                                           : 'has no u123456789_ prefix, which is unusual on Hostinger')
+                      . ', and a password of ' . strlen(DB_PASS) . ' characters was read from .env — '
+                      . 'but the server rejected the pair.',
+            'fix' => 'Surrounding quotes and stray whitespace are stripped when .env is read, so if '
+                   . 'that character count matches the password you set, the mismatch is the value '
+                   . 'itself. The reliable fix: in hPanel → Databases, use "Change password" on this '
+                   . 'user, set one made only of letters and digits, and paste that exact value after '
+                   . 'DB_PASS= in ' . $envDir . '/.env.'];
 }
