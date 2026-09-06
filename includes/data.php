@@ -405,7 +405,7 @@ const PILLARS = [
     ['icon' => 'sparkle',  'title' => 'Strict sterilisation',
      'text' => 'Autoclaved instruments, single-use disposables and surface disinfection between every single patient, without exception.'],
     ['icon' => 'clock',    'title' => 'Appointments that run on time',
-     'text' => 'Slots are 15 minutes and bookable online. You are seen close to the time you chose, not an hour after it.'],
+     'text' => 'Slots are bookable online, so you are seen close to the time you chose rather than an hour after it.'],
     ['icon' => 'rupee',    'title' => 'Costs explained upfront',
      'text' => 'You get a clear estimate before treatment starts, and an honest view of which options are worth the money for your case.'],
     ['icon' => 'heart',    'title' => 'Gentle with anxious patients',

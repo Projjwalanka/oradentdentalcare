@@ -14,3 +14,13 @@ vendor/
 # Build scratch
 /tmp/
 *.bak
+
+# Clinic videos — NOT committed on purpose.
+# This repository is public, so anything committed here is publicly
+# downloadable even if the website never links to it. These clips show
+# identifiable patients, so they stay out until each one has been watched
+# end to end and confirmed clean (see includes/media.php).
+# To publish one: delete its line below, uncomment its entry in
+# includes/media.php, then commit.
+assets/video/clinic-tour-1.mp4
+assets/video/clinic-tour-2.mp4

@@ -114,3 +114,132 @@
     if (Number(row.dataset.day) === today) row.classList.add('is-today');
   });
 })();
+
+/* ==========================================================================
+   Showcase slider — one slide at a time.
+   Swipe is the browser's own scroll-snap; this only wires arrows, dots,
+   keyboard and autoplay on top of it.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  document.querySelectorAll('[data-showcase]').forEach(function (root) {
+    var view   = root.querySelector('.showcase__viewport');
+    var slides = Array.prototype.slice.call(root.querySelectorAll('.showcase__slide'));
+    var prev   = root.querySelector('[data-sc-prev]');
+    var next   = root.querySelector('[data-sc-next]');
+    var dots   = Array.prototype.slice.call(root.querySelectorAll('[data-sc-dot]'));
+    var toggle = root.querySelector('[data-sc-toggle]');
+    if (!view || slides.length < 2) {
+      if (prev) prev.hidden = true;
+      if (next) next.hidden = true;
+      return;
+    }
+
+    var reduced  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var interval = Number(root.dataset.autoplay || 0);
+    var timer    = null;
+    var paused   = false;
+    var index    = 0;
+
+    function go(i, smooth) {
+      index = Math.max(0, Math.min(slides.length - 1, i));
+      view.scrollTo({ left: slides[index].offsetLeft - view.offsetLeft,
+                      behavior: smooth === false || reduced ? 'auto' : 'smooth' });
+      sync();
+    }
+
+    function current() {
+      // Whichever slide's centre is nearest the viewport centre
+      var mid = view.scrollLeft + view.clientWidth / 2, best = 0, bestD = Infinity;
+      slides.forEach(function (s, i) {
+        var c = s.offsetLeft - view.offsetLeft + s.offsetWidth / 2;
+        var d = Math.abs(c - mid);
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      return best;
+    }
+
+    function sync() {
+      var i = current();
+      index = i;
+      dots.forEach(function (d, n) { d.setAttribute('aria-current', n === i ? 'true' : 'false'); });
+      if (prev) prev.disabled = i === 0;
+      if (next) next.disabled = i === slides.length - 1;
+    }
+
+    /* ---- autoplay ---- */
+    function tick() {
+      if (paused) return;
+      go(index >= slides.length - 1 ? 0 : index + 1);
+    }
+    function start() {
+      if (!interval || reduced) return;
+      stop();
+      timer = window.setInterval(tick, interval);
+    }
+    function stop() { if (timer) { window.clearInterval(timer); timer = null; } }
+
+    function setPaused(state) {
+      paused = state;
+      if (toggle) {
+        toggle.setAttribute('aria-pressed', state ? 'true' : 'false');
+        toggle.setAttribute('aria-label', state ? 'Play the slideshow' : 'Pause the slideshow');
+        toggle.innerHTML = state
+          ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>'
+          : '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/>'
+            + '<rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+      }
+    }
+
+    if (prev) prev.addEventListener('click', function () { go(index - 1); });
+    if (next) next.addEventListener('click', function () { go(index + 1); });
+    dots.forEach(function (d) {
+      d.addEventListener('click', function () { go(Number(d.dataset.scDot)); });
+    });
+    if (toggle) toggle.addEventListener('click', function () { setPaused(!paused); });
+
+    view.addEventListener('scroll', function () {
+      window.clearTimeout(view._t);
+      view._t = window.setTimeout(sync, 90);
+    }, { passive: true });
+
+    view.addEventListener('keydown', function (ev) {
+      if (ev.key === 'ArrowRight') { ev.preventDefault(); go(index + 1); }
+      if (ev.key === 'ArrowLeft')  { ev.preventDefault(); go(index - 1); }
+    });
+
+    // Don't advance while someone is looking at, or interacting with, a slide
+    ['mouseenter', 'focusin', 'touchstart', 'pointerdown'].forEach(function (ev) {
+      root.addEventListener(ev, function () { paused = true; }, { passive: true });
+    });
+    ['mouseleave', 'focusout'].forEach(function (ev) {
+      root.addEventListener(ev, function () {
+        if (toggle && toggle.getAttribute('aria-pressed') === 'true') return;
+        paused = false;
+      }, { passive: true });
+    });
+
+    // A playing video always wins over autoplay
+    root.querySelectorAll('video').forEach(function (v) {
+      v.addEventListener('play',  function () { paused = true; });
+      v.addEventListener('pause', function () {
+        if (!toggle || toggle.getAttribute('aria-pressed') !== 'true') paused = false;
+      });
+    });
+
+    // Pause entirely when the slider is off-screen or the tab is hidden
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) { en.isIntersecting ? start() : stop(); });
+      }, { threshold: 0.25 }).observe(root);
+    } else {
+      start();
+    }
+    document.addEventListener('visibilitychange', function () {
+      document.hidden ? stop() : start();
+    });
+
+    sync();
+  });
+})();

@@ -2,6 +2,9 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/includes/seo.php';
+require_once __DIR__ . '/includes/showcase.php';
+require_once __DIR__ . '/includes/slider.php';
+require_once __DIR__ . '/includes/media.php';   // CLINIC_FEATURES
 
 Page::$path        = '/';
 Page::$title       = 'Dentist in Sonarpur, Kolkata | ORADENT Dental Care — Dr. Nabanita Chaklader';
@@ -16,7 +19,7 @@ require __DIR__ . '/includes/header.php';
 <section class="hero">
   <div class="wrap hero__in">
     <div>
-      <span class="pill"><?= icon('pin') ?> <?= e(CLINIC['locality']) ?>, <?= e(CLINIC['city']) ?> · Est. <?= e(CLINIC['founded']) ?></span>
+      <span class="pill"><?= icon('pin') ?> <?= e(CLINIC['neighbourhood']) ?>, <?= e(CLINIC['city']) ?></span>
       <h1>Healthy smile,<span>happy life.</span></h1>
       <p class="hero__lede">
         Dental care and oral surgery in <?= e(CLINIC['locality']) ?> led by <strong style="color:#fff"><?= e(CLINIC['doctor']) ?></strong>,
@@ -35,7 +38,7 @@ require __DIR__ . '/includes/header.php';
       <ul class="hero__points">
         <li><?= icon('check-c') ?> Specialist-led RCT &amp; oral surgery</li>
         <li><?= icon('check-c') ?> Autoclaved instruments</li>
-        <li><?= icon('check-c') ?> 15-minute slots, booked online</li>
+        <li><?= icon('check-c') ?> Slots booked online</li>
         <li><?= icon('check-c') ?> All ages welcome</li>
       </ul>
     </div>
@@ -161,43 +164,35 @@ require __DIR__ . '/includes/header.php';
   </div>
 </section>
 
-<!-- ------------------------------------------------------------- gallery -->
-<section class="section section--tint">
+<!-- -------------------------------------------------------- the clinic -->
+<section class="section section--tint" id="clinic">
   <div class="wrap">
-    <div class="slider__head">
-      <div class="section-head">
-        <span class="eyebrow">Inside the clinic</span>
-        <h2>See the place before you visit</h2>
-        <p>No stock photography — this is the actual clinic on Maharani Indira Devy Road.</p>
-      </div>
-      <div class="slider__nav">
-        <button class="slider__btn" type="button" data-slider-prev aria-label="Previous photo"><?= icon('left') ?></button>
-        <button class="slider__btn" type="button" data-slider-next aria-label="Next photo"><?= icon('right') ?></button>
-      </div>
+    <div class="section-head section-head--center">
+      <span class="eyebrow">Inside the clinic</span>
+      <h2>Built around hygiene and doing things properly</h2>
+      <p>A look at where you will be treated, and the standards the clinic runs to
+         &mdash; sterilisation, equipment, and how treatment decisions get made.</p>
     </div>
 
-    <div class="slider" data-slider>
-      <div class="slider__track">
-        <?php
-        $gallery = [
-            ['clinic-exterior',  'The clinic frontage on Maharani Indira Devy Road, showing ORADENT Dental Care\'s treatment list and opening hours', 'Our frontage — you can find us by the window graphics.'],
-            ['clinic-operatory', 'Dental operatory at ORADENT with dental chair, overhead light and instrument tray',                                   'The treatment room: modern chair, good light, sterile trays.'],
-            ['clinic-entrance',  'Patient entry door at ORADENT Dental Care with hygiene notice asking visitors to remove footwear',                     'Patient entry — footwear off, for everyone\'s hygiene.'],
-            ['dr-nabanita-chaklader', 'Dr. Nabanita Chaklader at her consulting desk',                                                                   'Consultation desk, where every visit starts.'],
-        ];
-        foreach ($gallery as [$file, $alt, $caption]): ?>
-        <div class="slider__slide">
-          <figure class="gallery-figure">
-            <picture>
-              <source type="image/webp" srcset="/assets/img/<?= e($file) ?>-800.webp">
-              <img src="/assets/img/<?= e($file) ?>-800.jpg" width="800" height="600" loading="lazy" decoding="async"
-                   alt="<?= e($alt) ?>">
-            </picture>
-            <figcaption><?= e($caption) ?></figcaption>
-          </figure>
-        </div>
-        <?php endforeach; ?>
+    <?php showcase(slider_images(), 'Inside ORADENT Dental Care'); ?>
+
+    <div class="grid grid--3 mt-3">
+      <?php foreach (CLINIC_FEATURES as $f): ?>
+      <div class="card feature-card" data-reveal>
+        <span class="icon-badge"><?= icon($f['icon']) ?></span>
+        <h3><?= e($f['title']) ?></h3>
+        <p><?= e($f['text']) ?></p>
+        <ul>
+          <?php foreach ($f['points'] as $pt): ?>
+            <li><?= icon('check') ?><span><?= e($pt) ?></span></li>
+          <?php endforeach; ?>
+        </ul>
       </div>
+      <?php endforeach; ?>
+    </div>
+
+    <div class="btn-row mt-3" style="justify-content:center">
+      <a class="btn btn--ghost" href="/gallery">More about the clinic <?= icon('arrow') ?></a>
     </div>
   </div>
 </section>
@@ -238,7 +233,7 @@ require __DIR__ . '/includes/header.php';
     <div class="cta-band">
       <div>
         <h2>Book in under a minute</h2>
-        <p>Pick a date, pick a free 15-minute slot, and your appointment is confirmed on the spot —
+        <p>Pick a date, pick a free slot, and your appointment is confirmed on the spot —
            any time in the next <?= BOOKING_WINDOW_DAYS ?> days. Prefer to talk? Call or WhatsApp us.</p>
       </div>
       <div class="btn-row">

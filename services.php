@@ -62,7 +62,7 @@ require __DIR__ . '/includes/header.php';
     <p class="lede">
       Most patients arrive knowing something is wrong but not what. A consultation — examination,
       an X-ray where it is needed, and a written plan with costs — is the sensible first step, and
-      it takes fifteen minutes.
+      and it takes one short appointment.
     </p>
     <div class="btn-row mt-2" style="justify-content:center">
       <a class="btn btn--primary btn--lg" href="/book"><?= icon('calendar') ?> Book an examination</a>

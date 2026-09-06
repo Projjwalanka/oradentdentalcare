@@ -68,6 +68,9 @@ const CLINIC = [
     'street'          => 'Alap Apartment, 105 Maharani Indira Devy Road, Rabindra Nagar Auto Stand',
     'landmark'        => 'Near Sakshi Baban, opposite Gurunan Math',
     'locality'        => 'Sonarpur',
+    // The immediate neighbourhood patients recognise — used where a hyper-local
+    // label reads better than the postal locality (e.g. the hero badge).
+    'neighbourhood'   => 'Rabindra Nagar',
     'region'          => 'West Bengal',
     'region_code'     => 'WB',
     'postal'          => '700103',

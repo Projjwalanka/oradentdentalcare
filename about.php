@@ -122,7 +122,7 @@ require __DIR__ . '/includes/header.php';
     <div class="cta-band">
       <div>
         <h2>Ready when you are</h2>
-        <p>Book a 15-minute slot online, or just call — we are happy to answer a question without an appointment.</p>
+        <p>Book a slot online, or just call — we are happy to answer a question without an appointment.</p>
       </div>
       <div class="btn-row">
         <a class="btn btn--primary btn--lg" href="/book"><?= icon('calendar') ?> Book online</a>

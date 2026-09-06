@@ -6,7 +6,7 @@ require_once __DIR__ . '/includes/seo.php';
 
 Page::$path        = '/book';
 Page::$title       = 'Book a Dental Appointment in Sonarpur, Kolkata | ORADENT Dental Care';
-Page::$description = 'Book your dental appointment at ORADENT Dental Care, Sonarpur, Kolkata. Pick a free 15-minute slot up to 30 days ahead and get instant confirmation. Mon–Sat, 10 AM–1 PM and 5–9 PM.';
+Page::$description = 'Book your dental appointment at ORADENT Dental Care, Sonarpur, Kolkata. Pick a free slot up to 30 days ahead and get instant confirmation. Mon–Sat, 10 AM–1 PM and 5–9 PM.';
 Page::$breadcrumbs = [
     ['name' => 'Home', 'url' => url()],
     ['name' => 'Book an appointment', 'url' => url('book')],
@@ -47,7 +47,7 @@ require __DIR__ . '/includes/header.php';
       <ol><li><a href="/">Home</a></li><li>Book an appointment</li></ol>
     </nav>
     <h1>Book an appointment</h1>
-    <p>Pick a date and a free 15-minute slot. Your appointment is confirmed straight away and you
+    <p>Pick a date and a free slot. Your appointment is confirmed straight away and you
        get a reference number — no waiting for a call back.</p>
   </div>
 </div>
@@ -233,7 +233,7 @@ require __DIR__ . '/includes/header.php';
         <div class="aside-card">
           <h3>How booking works</h3>
           <ul>
-            <li><?= icon('check-c') ?><span>Pick any free 15-minute slot, up to <?= BOOKING_WINDOW_DAYS ?> days ahead.</span></li>
+            <li><?= icon('check-c') ?><span>Pick any free slot, up to <?= BOOKING_WINDOW_DAYS ?> days ahead.</span></li>
             <li><?= icon('check-c') ?><span>Confirmed instantly — you get a reference number on screen.</span></li>
             <li><?= icon('check-c') ?><span>No payment online. You pay at the clinic after treatment.</span></li>
             <li><?= icon('check-c') ?><span>Need to change it? Call or WhatsApp with your reference.</span></li>

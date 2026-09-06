@@ -86,7 +86,7 @@ require __DIR__ . '/includes/header.php';
         <div class="cta-band mt-3">
           <div>
             <h2 style="font-size:1.5rem">Book <?= e($svc['name']) ?></h2>
-            <p>Choose a 15-minute slot at <?= e(CLINIC['locality']) ?> — confirmed instantly.</p>
+            <p>Choose a slot at <?= e(CLINIC['locality']) ?> — confirmed instantly.</p>
           </div>
           <div class="btn-row">
             <a class="btn btn--primary" href="/book?service=<?= e($slug) ?>"><?= icon('calendar') ?> Book online</a>

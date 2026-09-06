@@ -13,7 +13,7 @@ straight from this repository.
 | Area | Detail |
 |---|---|
 | **Pages** | Home, About the doctor, Services index + 8 individual treatment pages, Clinic gallery, FAQ, Contact, Book, Privacy, Terms, 404 |
-| **Booking** | 15-minute slots, Mon–Sat 10:00–13:00 and 17:00–21:00, bookable 30 days ahead, **instant confirmation**, database-level protection against double booking |
+| **Booking** | Bookable slots, Mon–Sat 10:00–13:00 and 17:00–21:00, bookable 30 days ahead, **instant confirmation**, database-level protection against double booking |
 | **Admin** | Password-protected dashboard: today/tomorrow lists, searchable appointment log, status changes, CSV export, day/slot blocking, patient messages |
 | **SEO** | `Dentist` + `Person` + `WebSite` + `BreadcrumbList` + `FAQPage` + `MedicalProcedure` JSON-LD, per-page titles and meta, canonicals, Open Graph, XML sitemap, robots.txt |
 | **Performance** | One CSS file, ~4 KB of JS, no web fonts, WebP with JPEG fallback, immutable asset caching, gzip |
@@ -52,7 +52,9 @@ straight from this repository.
 │   ├── messages.php         Contact-form enquiries
 │   └── includes/            auth.php, layout.php
 │
-├── assets/css  assets/js  assets/img
+├── assets/css  assets/js
+├── assets/img               Fixed page images
+│   └── slider/              DROP-IN FOLDER — everything here shows in the slider
 ├── sql/schema.sql           Database schema
 └── tools/                   build-images.py, router.php (dev only)
 ```
@@ -83,10 +85,27 @@ php -S localhost:8080 -t . tools/router.php
 
 `tools/router.php` reproduces the `.htaccess` rewrites so local URLs match production.
 
-To regenerate the responsive images from new source photos:
+### Adding photos to the slider
+
+Drop any `.jpg`, `.jpeg`, `.png` or `.webp` into **`assets/img/slider/`**. It
+appears in the slider on the home and Clinic pages on the next page load, and
+the arrows and dots adjust to the new count automatically. Delete a file and it
+goes. No code change is needed.
+
+- **Order** follows the filename, so the `01-`, `02-` prefixes set the sequence.
+- **Size** is handled for you — each image is resized once into
+  `assets/img/slider/.cache/` (gitignored) and served statically after that, so
+  a photo straight off a phone is fine.
+- **Titles** are derived from the filename (`07-waiting-area.jpg` becomes
+  "Waiting area"). For better wording and proper alt text, add an entry to
+  `assets/img/slider/captions.php`.
+
+See `assets/img/slider/README.txt` for the same notes beside the files.
+
+To rebuild the fixed page images (hero, doctor portrait) from source photos:
 
 ```bash
-python3 tools/build-images.py /path/to/photos
+python3 tools/build-media.py /path/to/photos
 ```
 
 ---
