@@ -56,13 +56,17 @@ straight from this repository.
 │   └── includes/            auth.php, layout.php
 │
 ├── assets/css  assets/js
-├── assets/img               Fixed page furniture (favicon, OG image)
-├── assets/media/            DROP-IN FOLDERS — see assets/media/README.md
-│   ├── doctor/              Portraits (first file = home page hero)
-│   ├── clinic/              Clinic photographs -> Gallery
-│   └── videos/              Clinic videos -> Gallery (+ posters/)
+├── assets/images/           PHOTOS, one folder per place — see assets/images/README.md
+│   ├── hero/  dentist/  about/   Portraits (first file is the one shown)
+│   ├── slider/              Home page slider
+│   ├── gallery/             Gallery page, Photos tab
+│   └── brand/               Logo, icons, social-share card (fixed names)
+├── assets/videos/           VIDEOS, one folder per place (+ posters/)
+│   ├── slider/              Home page slider, between the photos
+│   └── gallery/             Gallery page, Videos tab
+├── includes/fonts/          Watermark font (DejaVu Sans Bold)
 ├── sql/schema.sql           Database schema
-└── tools/                   build-images.py, router.php (dev only)
+└── tools/                   watermark-video.sh, router.php (dev only)
 ```
 
 ---
@@ -93,26 +97,29 @@ php -S localhost:8080 -t . tools/router.php
 
 ### Adding photos and videos
 
-**One folder = one section of the site.** Drop a file into the right folder under
-`assets/media/` and it appears on the next page load; delete it and it goes.
-No code change, ever.
+**One folder per place on the site.** Drop a file into the right folder and it
+appears on the next page load; delete it and it goes. No code change, ever.
 
 | Put it here | It appears |
 |---|---|
-| `assets/media/doctor/` | Home hero (first file) and "Meet the dentist" |
-| `assets/media/clinic/` | Gallery page, Photos tab |
-| `assets/media/videos/` | Gallery page, Videos tab (which only appears once a clip exists) |
+| `assets/images/hero/` | Home page hero (first file) |
+| `assets/images/dentist/` | Home page, "Meet your dentist" (first file) |
+| `assets/images/about/` | About page portrait (first file) |
+| `assets/images/slider/` + `assets/videos/slider/` | Home page slider. Photos and clips are interleaved by filename |
+| `assets/images/gallery/` | Gallery page, Photos tab |
+| `assets/videos/gallery/` | Gallery page, Videos tab (which only appears once a clip exists) |
 
-Order follows the filename (`01-`, `02-`), the filename becomes the caption, and
-each image is resized once into that folder's gitignored `.cache/`. Full rules,
-including video posters and the patient-privacy warning, are in
-**[assets/media/README.md](assets/media/README.md)**.
+Order follows the filename (`01-`, `02-`), and the filename becomes the caption.
+Each image is resized once into that folder's gitignored `.cache/`.
 
-To rebuild the fixed page images (hero, doctor portrait) from source photos:
+Slider and gallery media carry an `oradentdentalcare.com` watermark: it is
+stamped on the served photo copies (the originals are untouched) and overlaid
+on video players. It is configured under `WATERMARK` in `config/config.php`. To
+burn it into a video file itself, use `tools/watermark-video.sh` (needs ffmpeg
+locally).
 
-```bash
-python3 tools/build-media.py /path/to/photos
-```
+Full rules, including posters, brand files and the patient-privacy warning, are
+in **[assets/images/README.md](assets/images/README.md)**.
 
 ---
 

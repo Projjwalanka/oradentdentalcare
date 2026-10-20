@@ -166,11 +166,43 @@
       dots.forEach(function (d, n) { d.setAttribute('aria-current', n === i ? 'true' : 'false'); });
       if (prev) prev.disabled = i === 0;
       if (next) next.disabled = i === slides.length - 1;
+      syncVideos();
+    }
+
+    /* ---- video slides ----
+       A clip only ever plays while its slide is the one showing. When the
+       slideshow is running it starts the clip itself (muted, which is what
+       browsers allow without a click) and waits for it to end before moving
+       on; a visitor can always unmute or scrub with the player's controls. */
+    var videos = slides.map(function (s) { return s.querySelector('video[data-sc-video]'); });
+    var inView = false;
+
+    function syncVideos() {
+      videos.forEach(function (v, n) {
+        if (!v) return;
+        if (n !== index) {
+          if (!v.paused) v.pause();
+          return;
+        }
+        if (interval && !reduced && inView && !userPaused() && v.paused && !v.ended) {
+          var p = v.play();
+          if (p && p.catch) p.catch(function () { /* autoplay refused: controls still work */ });
+        }
+      });
+    }
+
+    function videoPlaying() {
+      var v = videos[index];
+      return !!(v && !v.paused && !v.ended);
+    }
+
+    function userPaused() {
+      return !!(toggle && toggle.getAttribute('aria-pressed') === 'true');
     }
 
     /* ---- autoplay ---- */
     function tick() {
-      if (paused) return;
+      if (paused || videoPlaying()) return;
       go(index >= slides.length - 1 ? 0 : index + 1);
     }
     function start() {
@@ -197,7 +229,12 @@
     dots.forEach(function (d) {
       d.addEventListener('click', function () { go(Number(d.dataset.scDot)); });
     });
-    if (toggle) toggle.addEventListener('click', function () { setPaused(!paused); });
+    if (toggle) toggle.addEventListener('click', function () {
+      setPaused(!userPaused());
+      var v = videos[index];
+      if (v && userPaused() && !v.paused) v.pause();
+      syncVideos();
+    });
 
     view.addEventListener('scroll', function () {
       window.clearTimeout(view._t);
@@ -220,25 +257,34 @@
       }, { passive: true });
     });
 
-    // A playing video always wins over autoplay
-    root.querySelectorAll('video').forEach(function (v) {
-      v.addEventListener('play',  function () { paused = true; });
-      v.addEventListener('pause', function () {
-        if (!toggle || toggle.getAttribute('aria-pressed') !== 'true') paused = false;
+    // A clip that finishes hands control straight back to the slideshow
+    videos.forEach(function (v) {
+      if (!v) return;
+      v.addEventListener('ended', function () {
+        if (!userPaused() && interval && !reduced) {
+          v.currentTime = 0;
+          go(index >= slides.length - 1 ? 0 : index + 1);
+        }
       });
     });
 
     // Pause entirely when the slider is off-screen or the tab is hidden
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) {
-        es.forEach(function (en) { en.isIntersecting ? start() : stop(); });
-      }, { threshold: 0.25 }).observe(root);
-    } else {
-      start();
+    var onScreen = !('IntersectionObserver' in window);
+    function visibility() {
+      inView = onScreen && !document.hidden;
+      if (inView) { start(); syncVideos(); }
+      else {
+        stop();
+        videos.forEach(function (v) { if (v && !v.paused) v.pause(); });
+      }
     }
-    document.addEventListener('visibilitychange', function () {
-      document.hidden ? stop() : start();
-    });
+    if (!onScreen) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) { onScreen = en.isIntersecting; visibility(); });
+      }, { threshold: 0.25 }).observe(root);
+    }
+    document.addEventListener('visibilitychange', visibility);
+    visibility();
 
     sync();
   });

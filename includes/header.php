@@ -56,15 +56,17 @@ $navItems = [
 <meta property="og:description" content="<?= e($desc) ?>">
 <meta property="og:url" content="<?= e(Page::canonical()) ?>">
 <meta property="og:image" content="<?= e(url(ltrim(Page::$image, '/'))) ?>">
+<?php if (Page::$image === '/assets/images/brand/social-share.jpg'): /* the only image whose size is fixed */ ?>
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<?php endif; ?>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="<?= e($title) ?>">
 <meta name="twitter:description" content="<?= e($desc) ?>">
 <meta name="twitter:image" content="<?= e(url(ltrim(Page::$image, '/'))) ?>">
 
-<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="icon" href="/assets/images/brand/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/images/brand/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="stylesheet" href="<?= e(asset('assets/css/style.css')) ?>">
 

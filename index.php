@@ -11,16 +11,13 @@ Page::$title       = 'Dentist in ' . CLINIC['locality'] . ', ' . CLINIC['city'] 
 Page::$description = 'Calm, clear dental care for your family in ' . CLINIC['locality'] . ', ' . CLINIC['city']
                    . '. Dr. Nabanita Chaklader, BDS (WBUHS) — root canal treatment, implants, oral surgery '
                    . 'and children\'s dentistry. Open every day. Book online in under a minute.';
-Page::$image       = '/assets/img/og-default.jpg';
 Page::$faqs        = array_slice(general_faqs(), 0, 6);
 
-/* The hero portrait is simply the first file in assets/media/doctor/ — rename a
-   file to change it, no code edit. See assets/media/README.md. */
-$doctorPhotos = media_photos('doctor');
-$portrait     = $doctorPhotos[0] ?? null;
-/* A second portrait, when there is one, so the hero image is not simply
-   repeated further down the page. Falls back to the same one. */
-$portraitAlt  = $doctorPhotos[1] ?? $portrait;
+/* Every picture on this page comes from its own placeholder folder — drop a
+   file in to change it, no code edit. See assets/images/README.md. */
+$portrait    = media_first('hero');
+$portraitAlt = media_first('dentist') ?? $portrait;   // "Meet your dentist"
+$slides      = media_items('slider');                 // photos and videos, by filename
 
 /**
  * The four paths a visitor actually arrives with. Deliberately phrased as the
@@ -251,8 +248,27 @@ require __DIR__ . '/includes/header.php';
   </div>
 </section>
 
-<!-- ============================================== 5. the clinic (lower down) -->
-<section class="section" id="clinic">
+<?php if ($slides): ?>
+<!-- ============================================ 5. inside the clinic slider -->
+<section class="section clinic-tour" id="inside">
+  <div class="wrap">
+    <div class="section-head section-head--center">
+      <span class="eyebrow">Inside the clinic</span>
+      <h2>See where you will be treated</h2>
+      <p>Real photographs and video of the clinic &mdash; not stock images.</p>
+    </div>
+
+    <?php showcase($slides, 'Inside ORADENT Dental Care'); ?>
+
+    <div class="btn-row mt-3" style="justify-content:center">
+      <a class="btn btn--ghost" href="/gallery">Open the full gallery <?= icon('arrow') ?></a>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
+<!-- ============================================== 6. the clinic (lower down) -->
+<section class="section" id="clinic"<?= $slides ? ' style="padding-top:0"' : '' ?>>
   <div class="wrap">
     <div class="section-head section-head--center">
       <span class="eyebrow">Our standards</span>
@@ -276,9 +292,11 @@ require __DIR__ . '/includes/header.php';
       <?php endforeach; ?>
     </div>
 
+    <?php if (!$slides): /* otherwise the slider above already links there */ ?>
     <div class="btn-row mt-3" style="justify-content:center">
       <a class="btn btn--ghost" href="/gallery">See the clinic and videos <?= icon('arrow') ?></a>
     </div>
+    <?php endif; ?>
   </div>
 </section>
 

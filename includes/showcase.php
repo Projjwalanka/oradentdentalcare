@@ -5,15 +5,16 @@ require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/icons.php';
 
 /**
- * Render the showcase slider.
+ * Render the showcase slider — photos and videos, one slide at a time.
  *
- * Accepts either shape of item:
- *   folder-driven (includes/slider.php)  'src', 'srcset', 'w', 'h'
- *   manifest      (includes/media.php)   'file' basename, or 'video'
+ * Items come from media_items() / media_images() / media_videos() in
+ * includes/media_lib.php, so the slides are whatever is in the placeholder's
+ * folders. A video slide plays muted when it comes into view and the slideshow
+ * waits for it to finish before moving on.
  *
  * @param array<int, array<string,mixed>> $items
  * @param string $label     accessible name for the carousel
- * @param bool   $autoplay  advance on a timer (pauses on hover, focus, or when
+ * @param bool   $autoplay  advance on a timer (pauses on hover, focus, or while
  *                          a video is playing)
  */
 function showcase(array $items, string $label = 'Clinic photos', bool $autoplay = true): void
@@ -32,32 +33,13 @@ function showcase(array $items, string $label = 'Clinic photos', bool $autoplay 
           <div class="showcase__slide" role="group" aria-roledescription="slide"
                aria-label="<?= $i + 1 ?> of <?= $total ?>">
             <?php if (($m['type'] ?? 'image') === 'video'): ?>
-              <?php /* Folder-driven: src and poster come from assets/media/videos/
-                        via media_videos(). preload="none" so a gallery of clips
-                        costs nothing until one is actually played. */ ?>
-              <video controls preload="none" playsinline
-                     <?= !empty($m['poster']) ? 'poster="' . e($m['poster']) . '"' : '' ?>>
-                <source src="<?= e($m['src'] ?? ('/assets/video/' . ($m['video'] ?? ''))) ?>" type="video/mp4">
-                <?= e($m['alt']) ?>
-              </video>
-
-            <?php elseif (!empty($m['src'])): /* folder-driven */ ?>
+              <?php media_video_tag($m, 'data-sc-video muted'); ?>
+            <?php else: ?>
               <img src="<?= e($m['src']) ?>"
                    <?= !empty($m['srcset']) ? 'srcset="' . e($m['srcset']) . '" sizes="(min-width: 1160px) 1100px, 96vw"' : '' ?>
                    <?= !empty($m['w']) ? 'width="' . (int) $m['w'] . '" height="' . (int) $m['h'] . '"' : '' ?>
                    alt="<?= e($m['alt']) ?>"
-                   loading="<?= $i === 0 ? 'eager' : 'lazy' ?>"
-                   <?= $i === 0 ? 'fetchpriority="high"' : '' ?> decoding="async">
-
-            <?php else: /* legacy manifest basename */ ?>
-              <picture>
-                <source type="image/webp"
-                        srcset="/assets/img/<?= e($m['file']) ?>-800.webp 800w, /assets/img/<?= e($m['file']) ?>-1200.webp 1200w"
-                        sizes="(min-width: 1160px) 1100px, 96vw">
-                <img src="/assets/img/<?= e($m['file']) ?>-1200.jpg" width="1200" height="750"
-                     alt="<?= e($m['alt']) ?>"
-                     loading="<?= $i === 0 ? 'eager' : 'lazy' ?>" decoding="async">
-              </picture>
+                   loading="<?= $i === 0 ? 'eager' : 'lazy' ?>" decoding="async">
             <?php endif; ?>
 
             <?php if (!empty($m['title']) || !empty($m['caption'])): ?>
@@ -85,12 +67,37 @@ function showcase(array $items, string $label = 'Clinic photos', bool $autoplay 
         <?php endif; ?>
         <div class="showcase__dots" role="tablist" aria-label="Choose a slide">
           <?php foreach ($items as $i => $m): ?>
-            <button class="showcase__dot" type="button" role="tab" data-sc-dot="<?= $i ?>"
+            <button class="showcase__dot<?= ($m['type'] ?? '') === 'video' ? ' showcase__dot--video' : '' ?>"
+                    type="button" role="tab" data-sc-dot="<?= $i ?>"
                     aria-current="<?= $i === 0 ? 'true' : 'false' ?>"
-                    aria-label="Slide <?= $i + 1 ?><?= !empty($m['title']) ? ': ' . e($m['title']) : '' ?>"></button>
+                    aria-label="Slide <?= $i + 1 ?><?= ($m['type'] ?? '') === 'video' ? ' (video)' : '' ?><?= !empty($m['title']) ? ': ' . e($m['title']) : '' ?>"></button>
           <?php endforeach; ?>
         </div>
       </div>
+      <?php endif; ?>
+    </div>
+    <?php
+}
+
+/**
+ * A <video> with its watermark overlay, shared by the slider and the gallery.
+ * preload="none" so a page of clips costs nothing until one is played.
+ *
+ * @param array<string,mixed> $v      an item from media_videos()
+ * @param string              $attrs  extra attributes for the <video> tag
+ */
+function media_video_tag(array $v, string $attrs = ''): void
+{
+    ?>
+    <div class="media-video">
+      <video controls playsinline preload="none" <?= $attrs ?>
+             <?= !empty($v['poster']) ? 'poster="' . e($v['poster']) . '"' : '' ?>
+             aria-label="<?= e($v['alt']) ?>">
+        <source src="<?= e($v['src']) ?>" type="<?= e($v['mime'] ?? 'video/mp4') ?>">
+        <?= e($v['alt']) ?>
+      </video>
+      <?php if (!empty($v['watermark'])): ?>
+        <span class="media-video__wm" aria-hidden="true"><?= e($v['watermark']) ?></span>
       <?php endif; ?>
     </div>
     <?php

@@ -1033,3 +1033,20 @@ strong { font-weight: 700; color: var(--navy-800); }
 }
 .gallery-item figcaption b{ font-size:.95rem; }
 .gallery-item figcaption span{ font-size:.85rem; color:var(--ink-mute,#64748b); line-height:1.5; }
+
+/* ------------------------------------------------- video + watermark -- */
+/* Shared by slider and gallery. The label is overlaid rather than burned in
+   (servers rarely have ffmpeg); tools/watermark-video.sh burns it into the file
+   itself when that matters. Top-right keeps it clear of captions and controls. */
+.media-video{ position:relative; }
+.media-video__wm{
+  position:absolute; top:.7rem; right:.8rem; z-index:1;
+  font-size:clamp(.66rem, 1.4vw, .82rem); font-weight:650; letter-spacing:.02em;
+  color:rgba(255,255,255,.72); text-shadow:0 1px 3px rgba(0,0,0,.6);
+  pointer-events:none; user-select:none;
+}
+.showcase__dot--video{ box-shadow:inset 0 0 0 2px var(--teal-600); background:transparent; }
+.showcase__dot--video[aria-current="true"]{ background:var(--teal-600); }
+
+/* home page slider section */
+.clinic-tour .showcase{ max-width:1100px; margin-inline:auto; }

@@ -6,17 +6,20 @@ require_once __DIR__ . '/includes/showcase.php';
 require_once __DIR__ . '/includes/media_lib.php';
 require_once __DIR__ . '/includes/media.php';   // CLINIC_FEATURES
 
-/* Both come straight from their folders — see assets/media/README.md. Add a
-   file, it appears here; remove it, it goes. No code change either way. */
-$photos = media_photos('clinic');
-$videos = media_videos();
+/* Both come straight from their placeholder folders, assets/images/gallery/ and
+   assets/videos/gallery/ — see assets/images/README.md. Add a file, it appears
+   here; remove it, it goes. No code change either way. */
+$photos = media_images('gallery');
+$videos = media_videos('gallery');
 
 Page::$path        = '/gallery';
 Page::$title       = 'Gallery — Photos & Videos of the Clinic | ORADENT Dental Care';
 Page::$description = 'Photographs and video from inside ORADENT Dental Care in ' . CLINIC['locality']
                    . ', ' . CLINIC['city'] . ' — the treatment room, equipment, sterilisation and entrance. '
                    . 'Real photographs of the actual clinic.';
-Page::$image       = '/assets/img/clinic-operatory-1200.jpg';
+if ($photos) {
+    Page::$image = strtok($photos[0]['src'], '?');
+}
 Page::$breadcrumbs = [
     ['name' => 'Home',    'url' => url()],
     ['name' => 'Gallery', 'url' => url('gallery')],
@@ -80,11 +83,7 @@ require __DIR__ . '/includes/header.php';
       <div class="gallery-grid gallery-grid--video">
         <?php foreach ($videos as $v): ?>
         <figure class="gallery-item">
-          <video controls preload="none" playsinline
-                 <?= $v['poster'] !== '' ? 'poster="' . e($v['poster']) . '"' : '' ?>>
-            <source src="<?= e($v['src']) ?>" type="video/mp4">
-            <?= e($v['alt']) ?>
-          </video>
+          <?php media_video_tag($v); ?>
           <figcaption>
             <b><?= e($v['title']) ?></b>
             <?php if ($v['caption'] !== ''): ?><span><?= e($v['caption']) ?></span><?php endif; ?>
