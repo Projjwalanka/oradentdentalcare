@@ -6,13 +6,8 @@
 
       <div class="footer__brand">
         <a class="brand" href="/" aria-label="<?= e(CLINIC['name']) ?> — home">
-          <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
-            <circle cx="24" cy="24" r="23" fill="none" stroke="#5f7fb5" stroke-width="2"/>
-            <path d="M24 12.5c-2.6 0-3.7 1.1-6.4 1.1-3.5 0-6 2.7-6 6.9 0 3.5 1.1 5.3 2.1 8.5.8 2.7 1 6.4 1.8 9 .5 1.6 1.3 2.7 2.6 2.7 1.9 0 2.2-2.2 2.7-4.8.5-2.4 1-4.2 3.2-4.2s2.7 1.8 3.2 4.2c.5 2.6.8 4.8 2.7 4.8 1.3 0 2.1-1.1 2.6-2.7.8-2.6 1-6.3 1.8-9 1-3.2 2.1-5 2.1-8.5 0-4.2-2.5-6.9-6-6.9-2.7 0-3.8-1.1-6.4-1.1Z"
-                  fill="none" stroke="#29a8c9" stroke-width="2.1" stroke-linejoin="round"/>
-            <path d="M20.6 19.4 24 28.6l3.4-9.2" fill="none" stroke="#8fb0dd" stroke-width="1.8"
-                  stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <?php /* The emblem is navy and teal, so on the dark footer it sits on a white disc. */ ?>
+          <?= brand_mark('brand__mark brand__mark--on-dark') ?>
           <span class="brand__text">
             <span class="brand__name">ORA<em>DENT</em></span>
             <span class="brand__sub">Dental Care</span>

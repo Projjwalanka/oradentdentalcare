@@ -720,6 +720,7 @@ strong { font-weight: 700; color: var(--navy-800); }
 .footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .6rem; }
 .footer li { margin: 0; }
 .footer__brand .brand__name { color: #fff; }
+.footer__brand .brand__name em { color: #29a8c9; }
 .footer__brand .brand__sub { color: #7f93b4; }
 .footer__about { margin-top: 1rem; max-width: 34ch; color: #97abc9; }
 .footer__bottom {
@@ -1050,3 +1051,7 @@ strong { font-weight: 700; color: var(--navy-800); }
 
 /* home page slider section */
 .clinic-tour .showcase{ max-width:1100px; margin-inline:auto; }
+
+/* brand mark: generated from assets/images/brand/logo.* (see media_lib.php) */
+img.brand__mark { object-fit: contain; }
+.brand__mark--on-dark { background: #fff; border-radius: 50%; padding: 2px; }

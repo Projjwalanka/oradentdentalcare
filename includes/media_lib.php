@@ -445,3 +445,298 @@ function media_items(string $placeholder): array
     usort($all, static fn (array $a, array $b) => strnatcasecmp($a['file'], $b['file']));
     return $all;
 }
+
+/* ------------------------------------------------------------------ brand -- */
+
+/*
+ * Every logo and icon on the site is made from ONE file:
+ *
+ *   assets/images/brand/logo.png   (or .jpg / .jpeg / .webp; PNG wins if both exist)
+ *
+ * Replace it and the header and footer mark, the logo given to Google, the
+ * browser-tab icons and the phone home-screen icon all follow on the next page
+ * load. The source may be a plain JPEG on a white background, even one with
+ * dark screenshot bars along its edges: those bars and the white margin are
+ * cropped off, white becomes transparent, and the emblem (everything above
+ * the first clear horizontal gap, i.e. the picture above the wordmark) is cut
+ * out for the small sizes, where words would be unreadable.
+ *
+ * Results go to assets/images/brand/.cache/ (gitignored) and are rebuilt
+ * whenever the source is newer.
+ */
+
+const BRAND_DIR = 'assets/images/brand';
+
+/** What brand_asset() can produce: name => [file, kind, size]. */
+const BRAND_ASSETS = [
+    'logo'             => ['logo.png',             'full', 800],  // whole lockup, transparent
+    'mark'             => ['logo-mark.png',        'mark', 256],  // emblem only, transparent
+    'icon-32'          => ['icon-32.png',          'disc', 32],   // browser tab
+    'icon-192'         => ['icon-192.png',         'disc', 192],  // Android / manifest
+    'icon-512'         => ['icon-512.png',         'disc', 512],
+    'apple-touch-icon' => ['apple-touch-icon.png', 'tile', 180],  // iOS: no transparency allowed
+];
+
+/** Site-relative path of the logo source, or null when there is none. */
+function brand_source(): ?string
+{
+    foreach (['png', 'jpg', 'jpeg', 'webp'] as $ext) {
+        if (is_file(media_path(BRAND_DIR . "/logo.$ext"))) {
+            return BRAND_DIR . "/logo.$ext";
+        }
+    }
+    return null;
+}
+
+/** URL of one generated brand file, or '' if it cannot be made. */
+function brand_asset(string $name): string
+{
+    $src = brand_source();
+    if ($src === null || !isset(BRAND_ASSETS[$name]) || !function_exists('imagecreatetruecolor')) {
+        return '';
+    }
+    $rel = BRAND_DIR . '/.cache/' . BRAND_ASSETS[$name][0];
+    $out = media_path($rel);
+    if (!(is_file($out) && filemtime($out) >= filemtime(media_path($src))) && !brand_build($src)) {
+        return '';
+    }
+    return media_url($rel);
+}
+
+/** Build every brand file from the source in one pass. */
+function brand_build(string $src): bool
+{
+    static $done = null;
+    if ($done !== null) {
+        return $done;
+    }
+    $dir = media_path(BRAND_DIR . '/.cache');
+    if (!is_dir($dir) && !@mkdir($dir, 0775, true) && !is_dir($dir)) {
+        return $done = false;
+    }
+    $im = media_load(media_path($src));
+    if (!$im) {
+        return $done = false;
+    }
+
+    [$x0, $y0, $x1, $y1] = brand_bounds($im);
+    $full = brand_crop($im, $x0, $y0, $x1, $y1);
+    $mark = brand_crop($im, ...brand_emblem($im, $x0, $y0, $x1, $y1));
+
+    $ok = true;
+    foreach (BRAND_ASSETS as [$file, $kind, $size]) {
+        $img = match ($kind) {
+            'full' => brand_clear_white(brand_fit($full, $size, null)),
+            'mark' => brand_clear_white(brand_fit($mark, $size, 0.03)),
+            'disc' => brand_on_white($mark, $size, true),
+            'tile' => brand_on_white($mark, $size, false),
+        };
+        $tmp = "$dir/$file." . getmypid() . '.tmp';
+        $ok  = imagepng($img, $tmp, 9) && @rename($tmp, "$dir/$file") && $ok;
+        @unlink($tmp);
+    }
+    return $done = $ok;
+}
+
+/** True when a pixel is part of the artwork rather than the white ground. */
+function brand_ink(\GdImage $im, int $x, int $y): bool
+{
+    $c = imagecolorat($im, $x, $y);
+    return min($c >> 16 & 255, $c >> 8 & 255, $c & 255) < 215;
+}
+
+/** True when a pixel is near-black, as in a screenshot's edge bars. */
+function brand_dark(\GdImage $im, int $x, int $y): bool
+{
+    $c = imagecolorat($im, $x, $y);
+    return max($c >> 16 & 255, $c >> 8 & 255, $c & 255) < 70;
+}
+
+/**
+ * Bounding box [x0, y0, x1, y1] of the artwork: dark edge bars (a screenshot's
+ * status bar, letterboxing) are peeled off first, then the white margin.
+ */
+function brand_bounds(\GdImage $im): array
+{
+    $w = imagesx($im);
+    $h = imagesy($im);
+
+    // A row or column is an edge bar when nearly all of it is near-black.
+    $darkRow = static function (int $y) use ($im, $w): bool {
+        $n = 0;
+        for ($x = 0; $x < $w; $x += 4) {
+            $n += brand_dark($im, $x, $y) ? 1 : 0;
+        }
+        return $n > 0.9 * ceil($w / 4);
+    };
+    $darkCol = static function (int $x, int $t, int $b) use ($im): bool {
+        $n = 0;
+        for ($y = $t; $y <= $b; $y += 4) {
+            $n += brand_dark($im, $x, $y) ? 1 : 0;
+        }
+        return $n > 0.9 * ceil(($b - $t + 1) / 4);
+    };
+    [$t, $b, $l, $r] = [0, $h - 1, 0, $w - 1];
+    while ($t < $b && $darkRow($t)) { $t++; }
+    while ($b > $t && $darkRow($b)) { $b--; }
+    while ($l < $r && $darkCol($l, $t, $b)) { $l++; }
+    while ($r > $l && $darkCol($r, $t, $b)) { $r--; }
+
+    // Then the tightest box round everything that is not near-white.
+    [$x0, $y0, $x1, $y1] = [$r, $b, $l, $t];
+    for ($y = $t; $y <= $b; $y++) {
+        for ($x = $l; $x <= $r; $x++) {
+            if (brand_ink($im, $x, $y)) {
+                $x0 = min($x0, $x);
+                $x1 = max($x1, $x);
+                $y0 = min($y0, $y);
+                $y1 = max($y1, $y);
+            }
+        }
+    }
+    return $x1 > $x0 && $y1 > $y0 ? [$x0, $y0, $x1, $y1] : [$l, $t, $r, $b];
+}
+
+/**
+ * The emblem: the artwork above the first clear horizontal band (the gap
+ * between picture and wordmark), trimmed to its own width. A logo with no such
+ * gap, such as a mark on its own, is returned whole.
+ */
+function brand_emblem(\GdImage $im, int $x0, int $y0, int $x1, int $y1): array
+{
+    $rowHasInk = static function (int $y) use ($im, $x0, $x1): bool {
+        for ($x = $x0; $x <= $x1; $x++) {
+            if (brand_ink($im, $x, $y)) {
+                return true;
+            }
+        }
+        return false;
+    };
+    $minGap = max(3, (int) round(($y1 - $y0) * 0.004));
+    $bottom = $y1;
+    for ($y = $y0 + (int) (($y1 - $y0) * 0.25), $run = 0; $y <= $y1; $y++) {
+        $run = $rowHasInk($y) ? 0 : $run + 1;
+        if ($run >= $minGap) {
+            $bottom = $y - $run;
+            break;
+        }
+    }
+
+    [$l, $r] = [$x1, $x0];
+    for ($y = $y0; $y <= $bottom; $y++) {
+        for ($x = $x0; $x <= $x1; $x++) {
+            if (brand_ink($im, $x, $y)) {
+                $l = min($l, $x);
+                $r = max($r, $x);
+            }
+        }
+    }
+    return $r > $l ? [$l, $y0, $r, $bottom] : [$x0, $y0, $x1, $y1];
+}
+
+/** Copy a box out of an image. */
+function brand_crop(\GdImage $im, int $x0, int $y0, int $x1, int $y1): \GdImage
+{
+    $out = imagecreatetruecolor($x1 - $x0 + 1, $y1 - $y0 + 1);
+    imagecopy($out, $im, 0, 0, $x0, $y0, $x1 - $x0 + 1, $y1 - $y0 + 1);
+    return $out;
+}
+
+/**
+ * Scale onto white. With a $pad (fraction of the side) the result is a
+ * $size-square canvas with the art centred inside the margin, which is what
+ * icons need; without one it is the art itself, at most $size wide or tall.
+ */
+function brand_fit(\GdImage $im, int $size, ?float $pad): \GdImage
+{
+    $sw = imagesx($im);
+    $sh = imagesy($im);
+    if ($pad !== null) {
+        $scale = $size * (1 - 2 * $pad) / max($sw, $sh);
+        $cw = $ch = $size;
+    } else {
+        $scale = min(1.0, $size / max($sw, $sh));
+        $cw    = (int) round($sw * $scale);
+        $ch    = (int) round($sh * $scale);
+    }
+    $dw  = max(1, (int) round($sw * $scale));
+    $dh  = max(1, (int) round($sh * $scale));
+    $out = imagecreatetruecolor($cw, $ch);
+    imagefill($out, 0, 0, 0xFFFFFF);
+    imagecopyresampled($out, $im, intdiv($cw - $dw, 2), intdiv($ch - $dh, 2), 0, 0, $dw, $dh, $sw, $sh);
+    return $out;
+}
+
+/**
+ * Make the white ground transparent ("colour to alpha"): each pixel is taken
+ * as its true colour laid over white at some opacity, so anti-aliased edges
+ * stay smooth instead of keeping a jagged white fringe.
+ */
+function brand_clear_white(\GdImage $im): \GdImage
+{
+    $w   = imagesx($im);
+    $h   = imagesy($im);
+    $out = imagecreatetruecolor($w, $h);
+    imagealphablending($out, false);
+    imagesavealpha($out, true);
+    for ($y = 0; $y < $h; $y++) {
+        for ($x = 0; $x < $w; $x++) {
+            $c = imagecolorat($im, $x, $y);
+            [$r, $g, $b] = [$c >> 16 & 255, $c >> 8 & 255, $c & 255];
+            $a = (max(255 - $r, 255 - $g, 255 - $b) / 255 - 0.05) / 0.95;   // JPEG noise near white -> clear
+            if ($a <= 0) {
+                imagesetpixel($out, $x, $y, 0x7F000000);
+                continue;
+            }
+            $a  = min(1.0, $a);
+            $un = static fn (int $v): int => (int) max(0, min(255, round(255 - (255 - $v) / $a)));
+            imagesetpixel($out, $x, $y, ((int) round(127 * (1 - $a)) << 24) | ($un($r) << 16) | ($un($g) << 8) | $un($b));
+        }
+    }
+    return $out;
+}
+
+/** The emblem on a white disc (tab and app icons) or a white square (iOS). */
+function brand_on_white(\GdImage $mark, int $size, bool $disc): \GdImage
+{
+    // Draw at 4x and scale down once, so the disc's edge is anti-aliased.
+    $big = min($size * 4, 1024);
+    $out = imagecreatetruecolor($big, $big);
+    imagealphablending($out, false);
+    imagesavealpha($out, true);
+    imagefill($out, 0, 0, $disc ? 0x7F000000 : 0xFFFFFF);
+    if ($disc) {
+        imagefilledellipse($out, $big >> 1, $big >> 1, $big - 2, $big - 2, 0xFFFFFF);
+    }
+    imagealphablending($out, true);
+    imagecopy($out, brand_clear_white(brand_fit($mark, $big, $disc ? 0.04 : 0.12)), 0, 0, 0, 0, $big, $big);
+
+    $small = imagecreatetruecolor($size, $size);
+    imagealphablending($small, false);
+    imagesavealpha($small, true);
+    imagefill($small, 0, 0, 0x7F000000);
+    imagecopyresampled($small, $out, 0, 0, 0, 0, $size, $size, $big, $big);
+    return $small;
+}
+
+/** The emblem as an <img> for the header and footer, or nothing without a logo. */
+function brand_mark(string $class = 'brand__mark'): string
+{
+    $src = brand_asset('mark');
+    return $src === '' ? ''
+        : '<img class="' . e($class) . '" src="' . e($src) . '" width="42" height="42" alt="" decoding="async">';
+}
+
+/** <link> tags for the browser-tab and home-screen icons. */
+function brand_icon_links(): string
+{
+    $out = '';
+    foreach ([['icon', 'icon-32', '32x32'], ['icon', 'icon-192', '192x192'],
+              ['apple-touch-icon', 'apple-touch-icon', '180x180']] as [$rel, $name, $sizes]) {
+        $href = brand_asset($name);
+        if ($href !== '') {
+            $out .= '<link rel="' . $rel . '" type="image/png" sizes="' . $sizes . '" href="' . e($href) . '">' . "\n";
+        }
+    }
+    return $out;
+}

@@ -65,8 +65,7 @@ $navItems = [
 <meta name="twitter:description" content="<?= e($desc) ?>">
 <meta name="twitter:image" content="<?= e(url(ltrim(Page::$image, '/'))) ?>">
 
-<link rel="icon" href="/assets/images/brand/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/images/brand/apple-touch-icon.png">
+<?= brand_icon_links() ?>
 <link rel="manifest" href="/site.webmanifest">
 <link rel="stylesheet" href="<?= e(asset('assets/css/style.css')) ?>">
 
@@ -102,13 +101,7 @@ $navItems = [
 <header class="header">
   <div class="wrap header__in">
     <a class="brand" href="/" aria-label="<?= e(CLINIC['name']) ?> — home">
-      <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
-        <circle cx="24" cy="24" r="23" fill="none" stroke="#182a5a" stroke-width="2"/>
-        <path d="M24 12.5c-2.6 0-3.7 1.1-6.4 1.1-3.5 0-6 2.7-6 6.9 0 3.5 1.1 5.3 2.1 8.5.8 2.7 1 6.4 1.8 9 .5 1.6 1.3 2.7 2.6 2.7 1.9 0 2.2-2.2 2.7-4.8.5-2.4 1-4.2 3.2-4.2s2.7 1.8 3.2 4.2c.5 2.6.8 4.8 2.7 4.8 1.3 0 2.1-1.1 2.6-2.7.8-2.6 1-6.3 1.8-9 1-3.2 2.1-5 2.1-8.5 0-4.2-2.5-6.9-6-6.9-2.7 0-3.8-1.1-6.4-1.1Z"
-              fill="none" stroke="#0a7297" stroke-width="2.1" stroke-linejoin="round"/>
-        <path d="M20.6 19.4 24 28.6l3.4-9.2" fill="none" stroke="#182a5a" stroke-width="1.8"
-              stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <?= brand_mark() ?>
       <span class="brand__text">
         <span class="brand__name">ORA<em>DENT</em></span>
         <span class="brand__sub">Dental Care</span>

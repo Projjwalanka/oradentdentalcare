@@ -60,7 +60,7 @@ straight from this repository.
 │   ├── hero/  dentist/  about/   Portraits (first file is the one shown)
 │   ├── slider/              Home page slider
 │   ├── gallery/             Gallery page, Photos tab
-│   └── brand/               Logo, icons, social-share card (fixed names)
+│   └── brand/               logo.jpeg -> every logo and icon; social-share.jpg
 ├── assets/videos/           VIDEOS, one folder per place (+ posters/)
 │   ├── slider/              Home page slider, between the photos
 │   └── gallery/             Gallery page, Videos tab

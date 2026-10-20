@@ -12,7 +12,7 @@ assets/
 │   ├── about/       About page portrait                            (first file)
 │   ├── slider/      Home page slider, "Inside the clinic"          (every file)
 │   ├── gallery/     Gallery page, Photos tab                       (every file)
-│   └── brand/       Logo, icons, social-share card       (fixed names, see below)
+│   └── brand/       logo.jpeg (makes every logo and icon), social-share.jpg
 └── videos/
     ├── slider/      Home page slider: clips play between the photos (every file)
     │   └── posters/
@@ -77,15 +77,26 @@ are left clean.
 
 ## Brand files
 
-`images/brand/` is read by fixed filename, so replace a file **keeping the same
-name**:
+`images/brand/` holds two files, each read by its fixed name:
 
 | File | Used for |
 |---|---|
-| `logo.svg` | Logo in search-engine data |
-| `favicon.svg` | Browser tab icon |
-| `apple-touch-icon.png` | Home-screen icon on phones (180×180) |
+| `logo.jpeg` (or `logo.png` / `.jpg` / `.webp`) | **Every** logo and icon. See below. |
 | `social-share.jpg` | Preview picture when a page is shared on WhatsApp, Facebook etc. (1200×630) |
+
+**To change the logo, replace `logo.jpeg` with the new one.** You don't need
+to convert anything. On the next page load the site builds everything from it:
+
+- It crops off the white margin, and any dark bars from a screenshot.
+- It makes the white background transparent.
+- It cuts out the emblem (the picture above the name) for the header, the
+  footer, the browser-tab icon and the phone home-screen icon, because the full
+  logo with its words is unreadable at those sizes.
+- It keeps the full logo, with the name and tagline, for Google's search results.
+
+A PNG with a transparent background gives the cleanest result. If there is
+both a `logo.png` and a `logo.jpeg`, the PNG is used. The generated files go
+in `brand/.cache/` (gitignored).
 
 ## Before you add a photo or video of a patient
 

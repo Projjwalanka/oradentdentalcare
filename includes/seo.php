@@ -65,7 +65,7 @@ function schema_organization(): array
         'legalName' => CLINIC['legal_name'],
         'alternateName' => 'ORADENT Dental Clinic',
         'url'    => url(),
-        'logo'   => ['@type' => 'ImageObject', '@id' => url('#logo'), 'url' => url('assets/images/brand/logo.svg')],
+        'logo'   => ['@type' => 'ImageObject', '@id' => url('#logo'), 'url' => url(brand_asset('logo'))],
         'image'  => array_map(static fn (array $p) => url($p['src']), array_slice(media_images('gallery'), 0, 2)),
         'description' => 'ORADENT Dental Care is a dental and oral surgery clinic in ' . CLINIC['locality']
             . ', ' . CLINIC['city'] . ', led by ' . CLINIC['doctor'] . ', ' . CLINIC['doctor_qual']
