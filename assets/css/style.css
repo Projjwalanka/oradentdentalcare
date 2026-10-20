@@ -899,7 +899,9 @@ strong { font-weight: 700; color: var(--navy-800); }
 .hero__portrait figure{ margin:0; position:relative; max-width:26rem; }
 @media (max-width:939px){ .hero__portrait figure{ margin-inline:auto; } }
 .hero__portrait img{
-  width:100%; height:auto; display:block; border-radius:14px;
+  /* Always a portrait frame; a wider photo is cropped to it (choose the part to
+     keep with 'focus' in assets/images/hero/captions.php). */
+  width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; display:block; border-radius:14px;
   box-shadow:0 18px 48px rgba(4,12,30,.42);
 }
 .hero__portrait figcaption{

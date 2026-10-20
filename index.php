@@ -103,8 +103,11 @@ require __DIR__ . '/includes/header.php';
     <div class="hero__portrait">
       <figure>
         <img src="<?= e($portrait['src']) ?>"
-             <?= $portrait['srcset'] !== '' ? 'srcset="' . e($portrait['srcset']) . '" sizes="(min-width:940px) 34vw, 86vw"' : '' ?>
+             <?php /* The 4:5 frame crops a wider photo, so ask for proportionally more pixels. */
+                   $crop = max(1.0, ($portrait['w'] / max(1, $portrait['h'])) / 0.8); ?>
+             <?= $portrait['srcset'] !== '' ? 'srcset="' . e($portrait['srcset']) . '" sizes="(min-width:940px) ' . round(34 * $crop) . 'vw, ' . round(86 * $crop) . 'vw"' : '' ?>
              width="<?= (int) $portrait['w'] ?>" height="<?= (int) $portrait['h'] ?>"
+             <?= $portrait['focus'] !== '' ? 'style="object-position:' . e($portrait['focus']) . '"' : '' ?>
              alt="<?= e($portrait['alt']) ?>" fetchpriority="high" decoding="async">
         <figcaption>
           <b><?= e(CLINIC['doctor']) ?></b>

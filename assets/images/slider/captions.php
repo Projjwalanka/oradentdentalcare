@@ -3,37 +3,33 @@
  * Optional wording for the home page slider photos (assets/images/slider/).
  *
  * Keyed by exact filename. Anything not listed here falls back to a title
- * derived from the filename, so this file is entirely optional — deleting it
- * breaks nothing.
+ * derived from the filename, so this file is entirely optional.
  *
- *   'title'   short label shown under the photo
+ *   'title'   short label shown on the slide
  *   'alt'     description for screen readers and search engines
  *   'caption' one sentence of context (optional)
+ *
+ * Patients shown here gave written consent to publication (October 2026).
  */
 return [
-    '01-treatment-room.jpg' => [
-        'title'   => 'The treatment room',
-        'alt'     => 'Dental treatment room at ORADENT Dental Care with the chair, overhead operating light and a laid-out instrument tray',
-        'caption' => 'One chair, one patient at a time — the tray is laid out fresh for each appointment.',
+    'Care with Smile.jpeg' => [
+        'title' => 'Care with a smile',
+        'alt'   => 'Dentist treating a smiling patient in the dental chair at ORADENT Dental Care',
     ],
-    '02-equipment-and-instruments.jpg' => [
-        'title'   => 'Equipment and instruments',
-        'alt'     => 'Sterilised dental instruments in sealed pouches beside the chairside unit at ORADENT Dental Care',
-        'caption' => 'Instruments arrive pouched and autoclaved, and the pouch is opened at the chair in front of you.',
+    'Clinic From Outside.jpeg' => [
+        'title' => 'The clinic from outside',
+        'alt'   => 'Entrance of ORADENT Dental Care in Parnasree, Behala, with the clinic name, opening times and patient-entry sign',
     ],
-    '03-chairside-care.jpg' => [
-        'title'   => 'Chairside care',
-        'alt'     => 'Dr. Nabanita Chaklader working at the dental chair at ORADENT Dental Care',
-        'caption' => 'The dentist who examines you is the dentist who treats you, including the surgical work.',
+    'Dr. Nabanita Chaklader.jpeg' => [
+        'title' => 'Dr. Nabanita Chaklader',
+        'alt'   => 'Dr. Nabanita Chaklader, BDS (WBUHS), seated in the treatment room at ORADENT Dental Care',
     ],
-    '04-clinic-frontage.jpg' => [
-        'title'   => 'Finding us',
-        'alt'     => 'Frontage of ORADENT Dental Care on Maharani Indira Devi Road, with treatments and opening hours on the window',
-        'caption' => 'The window graphics list our treatments and hours — easy to spot from the auto stand.',
+    'Treatment In Progress.jpeg' => [
+        'title' => 'Treatment in progress',
+        'alt'   => 'Dentist treating a patient in the dental chair at ORADENT Dental Care',
     ],
-    '05-patient-entry.jpg' => [
-        'title'   => 'Patient entry',
-        'alt'     => 'Entrance to the treatment chamber at ORADENT Dental Care, with footwear left outside',
-        'caption' => 'Footwear comes off outside the chamber — a small rule that keeps the treatment area genuinely clean.',
+    'Treatment Room.jpg' => [
+        'title' => 'The treatment room',
+        'alt'   => 'The treatment room at ORADENT Dental Care, with the dental chair, chairside unit and operating light',
     ],
 ];

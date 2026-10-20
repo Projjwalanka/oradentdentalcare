@@ -54,7 +54,7 @@ Accepted types: photos `.jpg` `.jpeg` `.png` `.webp`, videos `.mp4` `.webm`.
 
 ## Watermark
 
-Photos and video posters in **slider** and **gallery** are stamped with the
+Photos in **slider** and **gallery** are stamped with the
 site's domain (`oradentdentalcare.com`) in the top-right corner, and the
 domain is overlaid on the video player. The portraits (hero, dentist, about)
 are left clean.

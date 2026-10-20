@@ -29,7 +29,8 @@ require_once __DIR__ . '/functions.php';
  *
  * WORDS      The filename becomes the title: "02-treatment-room.jpg" ->
  *            "Treatment room". For better wording and alt text, add an entry to
- *            that folder's captions.php.
+ *            that folder's captions.php. Its optional 'focus' (e.g. 'right',
+ *            '80% 30%') says which part to keep when a frame crops the photo.
  *
  * SIZE       A photo straight off a phone is fine — it is turned upright from
  *            its EXIF orientation and resized once into the folder's .cache/,
@@ -37,7 +38,7 @@ require_once __DIR__ . '/functions.php';
  *            (read-only deploy) the original is served and the page still works.
  *
  * WATERMARK  Placeholders listed in WATERMARK (config/config.php) get the domain
- *            name stamped on every photo copy and video poster, and overlaid on
+ *            name stamped on every photo copy, and overlaid on
  *            the video player. The originals in assets/ are never modified.
  *
  * VIDEO      assets/videos/<placeholder>/posters/<same-name>.jpg is the poster
@@ -355,6 +356,8 @@ function media_image(string $dir, string $file, bool $mark, array $meta = []): a
                                       . CLINIC['locality'] . ', ' . CLINIC['city']),
         'title'   => $label,
         'caption' => $meta['caption'] ?? '',
+        // Where to keep the photo when a frame crops it, as CSS object-position.
+        'focus'   => preg_match('/^[\d.%\sa-z]{1,30}$/i', (string) ($meta['focus'] ?? '')) ? (string) $meta['focus'] : '',
     ];
 }
 
@@ -412,7 +415,8 @@ function media_videos(string $placeholder): array
         $poster = '';
         foreach ($posters as $p) {
             if (pathinfo($p, PATHINFO_FILENAME) === $base) {
-                $poster = media_image("$dir/posters", $p, $mark)['src'];
+                // Not stamped: the player's overlay already shows the domain on top of it.
+                $poster = media_image("$dir/posters", $p, false)['src'];
                 break;
             }
         }
