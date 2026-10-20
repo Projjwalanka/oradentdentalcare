@@ -14,7 +14,8 @@ straight from this repository.
 |---|---|
 | **Pages** | Home, About the doctor, Services index + 8 individual treatment pages, Clinic gallery, FAQ, Contact, Book, Privacy, Terms, 404 |
 | **Booking** | Bookable slots, every day 09:30–14:00 and 17:30–21:00, bookable 30 days ahead, **instant confirmation**, database-level protection against double booking |
-| **Admin** | Password-protected dashboard: today/tomorrow lists, searchable appointment log, status changes, CSV export, day/slot blocking, patient messages |
+| **Admin** | Password-protected dashboard: today/tomorrow lists, searchable appointment log, status changes, CSV export, day/slot blocking, patient messages, and Insights — booking / WhatsApp / call / directions clicks |
+| **Analytics** | First-party click tracking into your own MySQL. No cookies, no third-party script, no consent banner needed |
 | **SEO** | `Dentist` + `Person` + `WebSite` + `BreadcrumbList` + `FAQPage` + `MedicalProcedure` JSON-LD, per-page titles and meta, canonicals, Open Graph, XML sitemap, robots.txt |
 | **Performance** | One CSS file, ~4 KB of JS, no web fonts, WebP with JPEG fallback, immutable asset caching, gzip |
 | **Mobile** | Mobile-first CSS, sticky Call / WhatsApp / Book bar within thumb reach |
@@ -41,7 +42,8 @@ straight from this repository.
 │
 ├── api/
 │   ├── slots.php            GET  ?date=YYYY-MM-DD → availability JSON
-│   └── book.php             POST → creates an appointment
+│   ├── book.php             POST → creates an appointment
+│   └── track.php            POST → records one click (first-party, no cookies)
 │
 ├── admin/
 │   ├── setup.php            One-time creation of the first staff account
@@ -50,13 +52,21 @@ straight from this repository.
 │   ├── appointments.php     Log, filters, status changes, CSV export
 │   ├── blocks.php           Close a day or a single slot
 │   ├── messages.php         Contact-form enquiries
+│   ├── analytics.php        Insights: what the site is producing
 │   └── includes/            auth.php, layout.php
 │
 ├── assets/css  assets/js
-├── assets/img               Fixed page images
-│   └── slider/              DROP-IN FOLDER — everything here shows in the slider
+├── assets/images/           PHOTOS, one folder per place — see assets/images/README.md
+│   ├── hero/  dentist/  about/   Portraits (first file is the one shown)
+│   ├── slider/              Home page slider
+│   ├── gallery/             Gallery page, Photos tab
+│   └── brand/               logo.jpeg -> every logo and icon; social-share.jpg
+├── assets/videos/           VIDEOS, one folder per place (+ posters/)
+│   ├── slider/              Home page slider, between the photos
+│   └── gallery/             Gallery page, Videos tab
+├── includes/fonts/          Watermark font (DejaVu Sans Bold)
 ├── sql/schema.sql           Database schema
-└── tools/                   build-images.py, router.php (dev only)
+└── tools/                   watermark-video.sh, router.php (dev only)
 ```
 
 ---
@@ -85,28 +95,31 @@ php -S localhost:8080 -t . tools/router.php
 
 `tools/router.php` reproduces the `.htaccess` rewrites so local URLs match production.
 
-### Adding photos to the slider
+### Adding photos and videos
 
-Drop any `.jpg`, `.jpeg`, `.png` or `.webp` into **`assets/img/slider/`**. It
-appears in the slider on the home and Clinic pages on the next page load, and
-the arrows and dots adjust to the new count automatically. Delete a file and it
-goes. No code change is needed.
+**One folder per place on the site.** Drop a file into the right folder and it
+appears on the next page load; delete it and it goes. No code change, ever.
 
-- **Order** follows the filename, so the `01-`, `02-` prefixes set the sequence.
-- **Size** is handled for you — each image is resized once into
-  `assets/img/slider/.cache/` (gitignored) and served statically after that, so
-  a photo straight off a phone is fine.
-- **Titles** are derived from the filename (`07-waiting-area.jpg` becomes
-  "Waiting area"). For better wording and proper alt text, add an entry to
-  `assets/img/slider/captions.php`.
+| Put it here | It appears |
+|---|---|
+| `assets/images/hero/` | Home page hero (first file) |
+| `assets/images/dentist/` | Home page, "Meet your dentist" (first file) |
+| `assets/images/about/` | About page portrait (first file) |
+| `assets/images/slider/` + `assets/videos/slider/` | Home page slider. Photos and clips are interleaved by filename |
+| `assets/images/gallery/` | Gallery page, Photos tab |
+| `assets/videos/gallery/` | Gallery page, Videos tab (which only appears once a clip exists) |
 
-See `assets/img/slider/README.txt` for the same notes beside the files.
+Order follows the filename (`01-`, `02-`), and the filename becomes the caption.
+Each image is resized once into that folder's gitignored `.cache/`.
 
-To rebuild the fixed page images (hero, doctor portrait) from source photos:
+Slider and gallery media carry an `oradentdentalcare.com` watermark: it is
+stamped on the served photo copies (the originals are untouched) and overlaid
+on video players. It is configured under `WATERMARK` in `config/config.php`. To
+burn it into a video file itself, use `tools/watermark-video.sh` (needs ffmpeg
+locally).
 
-```bash
-python3 tools/build-media.py /path/to/photos
-```
+Full rules, including posters, brand files and the patient-privacy warning, are
+in **[assets/images/README.md](assets/images/README.md)**.
 
 ---
 
@@ -132,3 +145,6 @@ Treatment copy and FAQs live in **`includes/data.php`**.
 - Booking data is stored in your own MySQL database; nothing is sent to a third party.
 - The only external request a visitor's browser makes is the Google Maps iframe on
   the home and contact pages.
+- Click tracking is first-party: `api/track.php` writes an event name, where on the
+  page it came from and a timestamp to your own `ui_events` table. No cookie, no
+  identifier, no IP — so there is nothing to disclose in a consent banner.

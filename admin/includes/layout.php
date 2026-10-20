@@ -6,6 +6,8 @@ declare(strict_types=1);
  * Call admin_head($title) at the top and admin_foot() at the bottom.
  */
 
+require_once dirname(__DIR__, 2) . '/includes/media_lib.php';   // brand_icon_links()
+
 function admin_head(string $title, ?array $user = null): void
 {
     $nav = [
@@ -13,6 +15,7 @@ function admin_head(string $title, ?array $user = null): void
         '/admin/appointments.php' => ['Appointments', 'clock'],
         '/admin/blocks.php'    => ['Block time',  'close'],
         '/admin/messages.php'  => ['Messages',    'mail'],
+        '/admin/analytics.php' => ['Insights',    'star'],
     ];
     $cur = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH);
     ?>
@@ -23,7 +26,7 @@ function admin_head(string $title, ?array $user = null): void
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title><?= e($title) ?> · ORADENT Admin</title>
-<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<?= brand_icon_links() ?>
 <link rel="stylesheet" href="<?= e(asset('assets/css/style.css')) ?>">
 <link rel="stylesheet" href="<?= e(asset('assets/css/admin.css')) ?>">
 </head>

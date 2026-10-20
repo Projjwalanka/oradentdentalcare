@@ -166,11 +166,43 @@
       dots.forEach(function (d, n) { d.setAttribute('aria-current', n === i ? 'true' : 'false'); });
       if (prev) prev.disabled = i === 0;
       if (next) next.disabled = i === slides.length - 1;
+      syncVideos();
+    }
+
+    /* ---- video slides ----
+       A clip only ever plays while its slide is the one showing. When the
+       slideshow is running it starts the clip itself (muted, which is what
+       browsers allow without a click) and waits for it to end before moving
+       on; a visitor can always unmute or scrub with the player's controls. */
+    var videos = slides.map(function (s) { return s.querySelector('video[data-sc-video]'); });
+    var inView = false;
+
+    function syncVideos() {
+      videos.forEach(function (v, n) {
+        if (!v) return;
+        if (n !== index) {
+          if (!v.paused) v.pause();
+          return;
+        }
+        if (interval && !reduced && inView && !userPaused() && v.paused && !v.ended) {
+          var p = v.play();
+          if (p && p.catch) p.catch(function () { /* autoplay refused: controls still work */ });
+        }
+      });
+    }
+
+    function videoPlaying() {
+      var v = videos[index];
+      return !!(v && !v.paused && !v.ended);
+    }
+
+    function userPaused() {
+      return !!(toggle && toggle.getAttribute('aria-pressed') === 'true');
     }
 
     /* ---- autoplay ---- */
     function tick() {
-      if (paused) return;
+      if (paused || videoPlaying()) return;
       go(index >= slides.length - 1 ? 0 : index + 1);
     }
     function start() {
@@ -197,7 +229,12 @@
     dots.forEach(function (d) {
       d.addEventListener('click', function () { go(Number(d.dataset.scDot)); });
     });
-    if (toggle) toggle.addEventListener('click', function () { setPaused(!paused); });
+    if (toggle) toggle.addEventListener('click', function () {
+      setPaused(!userPaused());
+      var v = videos[index];
+      if (v && userPaused() && !v.paused) v.pause();
+      syncVideos();
+    });
 
     view.addEventListener('scroll', function () {
       window.clearTimeout(view._t);
@@ -220,26 +257,124 @@
       }, { passive: true });
     });
 
-    // A playing video always wins over autoplay
-    root.querySelectorAll('video').forEach(function (v) {
-      v.addEventListener('play',  function () { paused = true; });
-      v.addEventListener('pause', function () {
-        if (!toggle || toggle.getAttribute('aria-pressed') !== 'true') paused = false;
+    // A clip that finishes hands control straight back to the slideshow
+    videos.forEach(function (v) {
+      if (!v) return;
+      v.addEventListener('ended', function () {
+        if (!userPaused() && interval && !reduced) {
+          v.currentTime = 0;
+          go(index >= slides.length - 1 ? 0 : index + 1);
+        }
       });
     });
 
     // Pause entirely when the slider is off-screen or the tab is hidden
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (es) {
-        es.forEach(function (en) { en.isIntersecting ? start() : stop(); });
-      }, { threshold: 0.25 }).observe(root);
-    } else {
-      start();
+    var onScreen = !('IntersectionObserver' in window);
+    function visibility() {
+      inView = onScreen && !document.hidden;
+      if (inView) { start(); syncVideos(); }
+      else {
+        stop();
+        videos.forEach(function (v) { if (v && !v.paused) v.pause(); });
+      }
     }
-    document.addEventListener('visibilitychange', function () {
-      document.hidden ? stop() : start();
-    });
+    if (!onScreen) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (en) { onScreen = en.isIntersecting; visibility(); });
+      }, { threshold: 0.25 }).observe(root);
+    }
+    document.addEventListener('visibilitychange', visibility);
+    visibility();
 
     sync();
+  });
+})();
+
+/* ==========================================================================
+   Click tracking — first-party, no cookies, no third-party script.
+
+   Any element carrying data-track="<event>" reports itself when clicked, with
+   an optional data-track-source (where on the page) and data-track-detail (the
+   service slug). sendBeacon so nothing is delayed: the browser hands the
+   request to the OS and lets the navigation proceed immediately.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var ENDPOINT = '/api/track.php';
+
+  function send(payload) {
+    payload.path = location.pathname;
+    try {
+      var body = JSON.stringify(payload);
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }));
+        return;
+      }
+      fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body,
+        keepalive: true
+      }).catch(function () {});
+    } catch (e) { /* tracking must never break the page */ }
+  }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-track]');
+    if (!el) return;
+    send({
+      event:  el.getAttribute('data-track'),
+      source: el.getAttribute('data-track-source') || '',
+      detail: el.getAttribute('data-track-detail') || ''
+    });
+  }, true);
+
+  /* A completed booking is worth more than a click on the button, and the
+     confirmation page is the only place we know it actually happened. */
+  var done = document.querySelector('[data-booking-complete]');
+  if (done) {
+    send({ event: 'booking_complete', source: 'confirmation', detail: done.getAttribute('data-service') || '' });
+  }
+})();
+
+/* ==========================================================================
+   Gallery tabs. Progressive: without JS every panel is visible and the page
+   still reads correctly, so nothing is hidden behind a script.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  document.querySelectorAll('[data-tabs]').forEach(function (root) {
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('[role="tab"]'));
+    if (tabs.length < 2) return;
+
+    function panelOf(tab) {
+      return document.getElementById(tab.getAttribute('aria-controls'));
+    }
+
+    function select(tab) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.setAttribute('tabindex', on ? '0' : '-1');
+        var p = panelOf(t);
+        if (p) p.hidden = !on;
+      });
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function () { select(tab); });
+      tab.addEventListener('keydown', function (e) {
+        var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        var next = tabs[(i + step + tabs.length) % tabs.length];
+        next.focus();
+        select(next);
+      });
+    });
+
+    select(tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0] || tabs[0]);
   });
 })();

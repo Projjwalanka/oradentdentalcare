@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/data.php';
+require_once __DIR__ . '/media_lib.php';
 
 /**
  * Per-page SEO state. Pages set these before including header.php.
@@ -12,7 +13,7 @@ final class Page
     public static string $title       = '';
     public static string $description = '';
     public static string $path        = '/';
-    public static string $image       = '/assets/img/og-default.jpg';
+    public static string $image       = '/assets/images/brand/social-share.jpg';
     public static string $type        = 'website';
     public static bool   $noindex     = false;
     /** @var array<int, array{name:string, url:string}> */
@@ -64,8 +65,8 @@ function schema_organization(): array
         'legalName' => CLINIC['legal_name'],
         'alternateName' => 'ORADENT Dental Clinic',
         'url'    => url(),
-        'logo'   => ['@type' => 'ImageObject', '@id' => url('#logo'), 'url' => url('assets/img/logo.svg')],
-        'image'  => [url('assets/img/clinic-exterior-1200.webp'), url('assets/img/clinic-operatory-1200.webp')],
+        'logo'   => ['@type' => 'ImageObject', '@id' => url('#logo'), 'url' => url(brand_asset('logo'))],
+        'image'  => array_map(static fn (array $p) => url($p['src']), array_slice(media_images('gallery'), 0, 2)),
         'description' => 'ORADENT Dental Care is a dental and oral surgery clinic in ' . CLINIC['locality']
             . ', ' . CLINIC['city'] . ', led by ' . CLINIC['doctor'] . ', ' . CLINIC['doctor_qual']
             . ' — a dental surgeon with special interests in root canal treatment and oral & maxillofacial surgery.',
@@ -136,7 +137,7 @@ function schema_dentist_person(): array
             . ', ' . CLINIC['city'] . ', with special interests in root canal treatment (endodontics) '
             . 'and oral & maxillofacial surgery.',
         'url'        => url('about'),
-        'image'      => url('assets/img/dr-nabanita-chaklader-800.webp'),
+        'image'      => url((media_first('about') ?? media_first('hero'))['src'] ?? 'assets/images/brand/social-share.jpg'),
         'medicalSpecialty' => ['https://schema.org/Dentistry'],
         'knowsAbout' => ['Root Canal Treatment', 'Oral and Maxillofacial Surgery', 'Dental Implants',
                          'Cosmetic Dentistry', 'Pediatric Dentistry'],

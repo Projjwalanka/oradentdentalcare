@@ -1,51 +1,12 @@
 <?php
 declare(strict_types=1);
 
-/**
- * Clinic feature copy, and the (currently unused) video manifest.
+/*
+ * Clinic feature copy, shared by the home and Gallery pages.
  *
- * SLIDER IMAGES NO LONGER LIVE HERE. They are read straight from
- *   assets/img/slider/
- * by includes/slider.php — drop a file in that folder and it appears; delete it
- * and it goes. See assets/img/slider/README.txt.
- *
- * CLINIC_MEDIA below is kept only to hold the video entries until those are
- * cleared for publication.
+ * Photos and videos are not listed here: each placeholder reads its own folder
+ * under assets/images/ and assets/videos/ (see includes/media_lib.php).
  */
-
-const CLINIC_MEDIA = [
-
-    /*
-     * ---------------------------------------------------------------------
-     * CLINIC TOUR VIDEOS — built and ready, but NOT published.
-     *
-     * Both clips (and Image-5.jpeg) show patients undergoing treatment with
-     * identifiable faces. Publishing those needs each patient's explicit,
-     * recorded consent. Once you have it, delete this comment block's markers
-     * and the two entries below go live.
-     *
-     * The files already exist: assets/video/clinic-tour-1.mp4 and -2.mp4
-     * (20s, muted, ~1 MB each, with poster frames).
-     * ---------------------------------------------------------------------
-     *
-    [
-        'type'    => 'video',
-        'file'    => 'clinic-tour-1',
-        'video'   => 'clinic-tour-1.mp4',
-        'alt'     => 'Video showing a patient being treated in the chair at ORADENT Dental Care',
-        'title'   => 'A visit, start to finish',
-        'caption' => 'What an appointment actually looks like.',
-    ],
-    [
-        'type'    => 'video',
-        'file'    => 'clinic-tour-2',
-        'video'   => 'clinic-tour-2.mp4',
-        'alt'     => 'Video showing treatment being carried out at ORADENT Dental Care',
-        'title'   => 'In the chair',
-        'caption' => 'Chairside assistance throughout the procedure.',
-    ],
-     */
-];
 
 /**
  * What the clinic does about hygiene, equipment and clinical process.

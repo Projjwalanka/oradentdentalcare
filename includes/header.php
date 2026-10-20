@@ -22,7 +22,7 @@ $navItems = [
     '/'          => 'Home',
     '/about'     => 'About',
     '/services'  => 'Services',
-    '/gallery'   => 'Clinic',
+    '/gallery'   => 'Gallery',
     '/faq'       => 'FAQ',
     '/contact'   => 'Contact',
 ];
@@ -56,15 +56,16 @@ $navItems = [
 <meta property="og:description" content="<?= e($desc) ?>">
 <meta property="og:url" content="<?= e(Page::canonical()) ?>">
 <meta property="og:image" content="<?= e(url(ltrim(Page::$image, '/'))) ?>">
+<?php if (Page::$image === '/assets/images/brand/social-share.jpg'): /* the only image whose size is fixed */ ?>
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<?php endif; ?>
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="<?= e($title) ?>">
 <meta name="twitter:description" content="<?= e($desc) ?>">
 <meta name="twitter:image" content="<?= e(url(ltrim(Page::$image, '/'))) ?>">
 
-<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<?= brand_icon_links() ?>
 <link rel="manifest" href="/site.webmanifest">
 <link rel="stylesheet" href="<?= e(asset('assets/css/style.css')) ?>">
 
@@ -81,10 +82,12 @@ $navItems = [
 <span class="topbar__hide-sm"><?= $status['detail'] !== '' ? ' ' . e($status['detail']) : '' ?> · <?= e(hours_inline()) ?></span>
     </span>
     <div class="topbar__right">
-      <a class="topbar__item topbar__hide-sm" href="<?= e(CLINIC['maps_url']) ?>" target="_blank" rel="noopener">
+      <a class="topbar__item topbar__hide-sm" href="<?= e(CLINIC['maps_url']) ?>" target="_blank" rel="noopener"
+         data-track="directions_click" data-track-source="topbar">
         <?= icon('pin') ?><?= e(CLINIC['locality']) ?>
       </a>
-      <a class="topbar__item" href="<?= e(tel_link()) ?>">
+      <a class="topbar__item" href="<?= e(tel_link()) ?>"
+         data-track="call_click" data-track-source="topbar">
         <?= icon('phone') ?><?= e(CLINIC['phone_display']) ?>
       </a>
     </div>
@@ -98,13 +101,7 @@ $navItems = [
 <header class="header">
   <div class="wrap header__in">
     <a class="brand" href="/" aria-label="<?= e(CLINIC['name']) ?> — home">
-      <svg class="brand__mark" viewBox="0 0 48 48" aria-hidden="true">
-        <circle cx="24" cy="24" r="23" fill="none" stroke="#182a5a" stroke-width="2"/>
-        <path d="M24 12.5c-2.6 0-3.7 1.1-6.4 1.1-3.5 0-6 2.7-6 6.9 0 3.5 1.1 5.3 2.1 8.5.8 2.7 1 6.4 1.8 9 .5 1.6 1.3 2.7 2.6 2.7 1.9 0 2.2-2.2 2.7-4.8.5-2.4 1-4.2 3.2-4.2s2.7 1.8 3.2 4.2c.5 2.6.8 4.8 2.7 4.8 1.3 0 2.1-1.1 2.6-2.7.8-2.6 1-6.3 1.8-9 1-3.2 2.1-5 2.1-8.5 0-4.2-2.5-6.9-6-6.9-2.7 0-3.8-1.1-6.4-1.1Z"
-              fill="none" stroke="#0a7297" stroke-width="2.1" stroke-linejoin="round"/>
-        <path d="M20.6 19.4 24 28.6l3.4-9.2" fill="none" stroke="#182a5a" stroke-width="1.8"
-              stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <?= brand_mark() ?>
       <span class="brand__text">
         <span class="brand__name">ORA<em>DENT</em></span>
         <span class="brand__sub">Dental Care</span>
@@ -119,7 +116,8 @@ $navItems = [
       </ul>
     </nav>
 
-    <a class="btn btn--primary header__cta" href="/book">
+    <a class="btn btn--primary header__cta" href="/book"
+       data-track="book_click" data-track-source="header">
       <?= icon('calendar') ?> Book Appointment
     </a>
 
@@ -140,9 +138,12 @@ $navItems = [
       <a class="drawer__link" href="<?= e($href) ?>"<?= is_active($href) && ($href !== '/' || current_path() === '/') ? ' aria-current="page"' : '' ?>><?= e($label) ?></a>
     <?php endforeach; ?>
     <div class="drawer__actions">
-      <a class="btn btn--primary btn--block" href="/book"><?= icon('calendar') ?> Book Appointment</a>
-      <a class="btn btn--wa btn--block" href="<?= e(whatsapp_link()) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?> WhatsApp us</a>
-      <a class="btn btn--ghost btn--block" href="<?= e(tel_link()) ?>"><?= icon('phone') ?> <?= e(CLINIC['phone_display']) ?></a>
+      <a class="btn btn--primary btn--block" href="/book"
+         data-track="book_click" data-track-source="drawer"><?= icon('calendar') ?> Book Appointment</a>
+      <a class="btn btn--wa btn--block" href="<?= e(whatsapp_link()) ?>" target="_blank" rel="noopener"
+         data-track="whatsapp_click" data-track-source="drawer"><?= icon('whatsapp') ?> WhatsApp us</a>
+      <a class="btn btn--ghost btn--block" href="<?= e(tel_link()) ?>"
+         data-track="call_click" data-track-source="drawer"><?= icon('phone') ?> <?= e(CLINIC['phone_display']) ?></a>
     </div>
     <p class="drawer__meta">
       <?= e(CLINIC['street']) ?><br><?= e(CLINIC['locality'] . ', ' . CLINIC['city'] . ' ' . CLINIC['postal']) ?><br>

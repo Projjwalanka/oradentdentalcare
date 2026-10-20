@@ -8,7 +8,7 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__);
-$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/';
+$path = rawurldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');   // "Care%20with%20Smile.jpeg" is a real file
 $path = rtrim($path, '/');
 
 if ($path === '' ) {

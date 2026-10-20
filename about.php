@@ -6,7 +6,11 @@ require_once __DIR__ . '/includes/seo.php';
 Page::$path        = '/about';
 Page::$title       = 'Dr. Nabanita Chaklader, BDS (WBUHS) | Dentist in Parnasree, Behala, Kolkata — ORADENT';
 Page::$description = 'Meet Dr. Nabanita Chaklader, BDS (WBUHS) — dental surgeon at ORADENT Dental Care, Parnasree, Behala, Kolkata, with special interests in root canal treatment and oral & maxillofacial surgery.';
-Page::$image       = '/assets/img/dr-nabanita-chaklader-1200.jpg';
+/* The portrait is the first file in assets/images/about/ — see assets/images/README.md. */
+$portrait = media_first('about');
+if ($portrait) {
+    Page::$image = strtok($portrait['src'], '?');
+}
 Page::$type        = 'profile';
 Page::$breadcrumbs = [
     ['name' => 'Home',  'url' => url()],
@@ -29,15 +33,14 @@ require __DIR__ . '/includes/header.php';
 
 <section class="section">
   <div class="wrap doctor">
+    <?php if ($portrait): ?>
     <div class="doctor__photo">
-      <picture>
-        <source type="image/webp" srcset="/assets/img/dr-nabanita-chaklader-800.webp 800w, /assets/img/dr-nabanita-chaklader-1200.webp 1200w"
-                sizes="(min-width: 900px) 38vw, 92vw">
-        <img src="/assets/img/dr-nabanita-chaklader-800.jpg" width="800" height="1000"
-             alt="Dr. Nabanita Chaklader, BDS (WBUHS), dental surgeon and founder of ORADENT Dental Care, Parnasree, Behala, Kolkata"
-             fetchpriority="high" decoding="async">
-      </picture>
+      <img src="<?= e($portrait['src']) ?>"
+           <?= $portrait['srcset'] !== '' ? 'srcset="' . e($portrait['srcset']) . '" sizes="(min-width: 900px) 38vw, 92vw"' : '' ?>
+           width="<?= (int) $portrait['w'] ?>" height="<?= (int) $portrait['h'] ?>"
+           alt="<?= e($portrait['alt']) ?>" fetchpriority="high" decoding="async">
     </div>
+    <?php endif; ?>
 
     <div class="prose">
       <span class="eyebrow">The dentist who will treat you</span>

@@ -129,6 +129,28 @@ define('BOOKING_WINDOW_DAYS', 30);  // how far ahead patients may book
 define('BOOKING_LEAD_MINUTES', 60); // minimum notice for a same-day booking
 define('BOOKING_MAX_PER_PHONE_PER_DAY', 3); // light abuse guard
 
+/* ----------------------------------------------------------- watermark ----- */
+
+/**
+ * The domain name stamped onto photos and videos, so a picture lifted from the
+ * site still says where it came from.
+ *
+ *   images  Burned into the resized copies the site serves (top-right). The
+ *           files in assets/images/ are never modified, so switching this off
+ *           or changing the text simply produces fresh copies.
+ *   videos  A domain label is overlaid on the player. To burn it into the file
+ *           itself, run tools/watermark-video.sh before adding the clip.
+ *
+ * Only the placeholders listed in 'placeholders' are marked — the hero and the
+ * doctor's portraits are left clean on purpose.
+ */
+const WATERMARK = [
+    'enabled'      => true,
+    'text'         => '',                       // '' = the domain from SITE_URL
+    'placeholders' => ['slider', 'gallery'],
+    'opacity'      => 0.6,                      // 0 (invisible) … 1 (solid)
+];
+
 /* --------------------------------------------------------------- admin ----- */
 
 define('ADMIN_SESSION_NAME',    'oradent_admin');
