@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/data.php';
+require_once __DIR__ . '/notify.php';
 
 /**
  * Validate and persist one appointment.
@@ -110,6 +111,12 @@ function create_booking(array $in): array
                 $date, $time . ':00', $notes !== '' ? $notes : null, $first,
                 (string) ($in['source'] ?? 'website'),
                 client_ip(), mb_substr((string) ($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 255),
+            ]);
+
+            notify_new_booking([
+                'reference' => $reference, 'name' => $name, 'phone' => $phone,
+                'service' => SERVICES[$service]['name'], 'date' => $date, 'time' => $time,
+                'notes' => $notes, 'first_visit' => $first,
             ]);
 
             $when = new DateTimeImmutable($date . ' ' . $time);
