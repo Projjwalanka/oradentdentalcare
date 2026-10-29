@@ -183,7 +183,7 @@ require __DIR__ . '/includes/header.php';
               <label class="field">
                 <span class="field__label">Mobile number <span class="req">*</span></span>
                 <input class="input" type="tel" name="phone" required autocomplete="tel"
-                       inputmode="numeric" placeholder="98301 69230"
+                       inputmode="numeric" placeholder="98303 82474"
                        value="<?= e((string) ($_POST['phone'] ?? '')) ?>"
                        <?= isset($formErrors['phone']) ? 'aria-invalid="true"' : '' ?>>
                 <span class="field__hint">We will call or WhatsApp this number if anything changes.</span>

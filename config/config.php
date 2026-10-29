@@ -86,9 +86,9 @@ const CLINIC = [
     'lat'             => 22.5043803,
     'lng'             => 88.3031698,
 
-    'phone'           => '+919830169230',   // E.164, used for tel: and schema
-    'phone_display'   => '+91 98301 69230',
-    'whatsapp'        => '919830169230',    // wa.me format, no plus
+    'phone'           => '+919830382474',   // E.164, used for tel: and schema
+    'phone_display'   => '+91 98303 82474',
+    'whatsapp'        => '919830382474',    // wa.me format, no plus
     'email'           => 'doctornabanita@gmail.com',
 
     'maps_url'        => 'https://maps.app.goo.gl/uoUen21Z47qxKw5d7',
